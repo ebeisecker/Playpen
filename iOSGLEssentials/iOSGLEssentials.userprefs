@@ -1,0 +1,36 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="iOSGLEssentials/MatrixUtil.cs">
+    <Files>
+      <File FileName="iOSGLEssentials/AppDelegate.cs" Line="35" Column="16" />
+      <File FileName="iOSGLEssentials/EAGLEView.cs" Line="144" Column="24" />
+      <File FileName="iOSGLEssentials/ES2Renderer.cs" Line="17" Column="26" />
+      <File FileName="iOSGLEssentials/OpenGLRenderer.cs" Line="80" Column="4" />
+      <File FileName="iOSGLEssentials/DemoModel.cs" Line="32" Column="3" />
+      <File FileName="iOSGLEssentials/MatrixUtil.cs" Line="95" Column="3" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="iOSGLEssentials" expanded="True" selected="True" />
+        </State>
+      </Pad>
+      <Pad Id="ClassPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State>
+          <Value>externalAssetName</Value>
+          <Value>filterMethods.Count</Value>
+        </State>
+      </Pad>
+      <Pad Id="ConnectionManagerPad">
+        <State selected="True" />
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iOSGLEssentials", "iOSGLEssentials\iOSGLEssentials.csproj", "{04F8EC8F-A85A-4279-8BC9-8832A39925CF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|iPhoneSimulator = Debug|iPhoneSimulator
+		Release|iPhoneSimulator = Release|iPhoneSimulator
+		Debug|iPhone = Debug|iPhone
+		Release|iPhone = Release|iPhone
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{04F8EC8F-A85A-4279-8BC9-8832A39925CF}.Debug|iPhone.ActiveCfg = Debug|iPhone
+		{04F8EC8F-A85A-4279-8BC9-8832A39925CF}.Debug|iPhone.Build.0 = Debug|iPhone
+		{04F8EC8F-A85A-4279-8BC9-8832A39925CF}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{04F8EC8F-A85A-4279-8BC9-8832A39925CF}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{04F8EC8F-A85A-4279-8BC9-8832A39925CF}.Release|iPhone.ActiveCfg = Release|iPhone
+		{04F8EC8F-A85A-4279-8BC9-8832A39925CF}.Release|iPhone.Build.0 = Release|iPhone
+		{04F8EC8F-A85A-4279-8BC9-8832A39925CF}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{04F8EC8F-A85A-4279-8BC9-8832A39925CF}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = iOSGLEssentials\iOSGLEssentials.csproj
+	EndGlobalSection
+EndGlobal

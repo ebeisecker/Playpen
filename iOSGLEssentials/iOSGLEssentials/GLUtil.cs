@@ -2,11 +2,9 @@ using System;
 
 namespace iOSGLEssentials
 {
-	public class GLUtil
+	public static class GLUtil
 	{
-		public GLUtil ()
-		{
-		}
+		
 	}
 }
 
