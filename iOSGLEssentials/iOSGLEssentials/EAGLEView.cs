@@ -74,7 +74,8 @@ namespace iOSGLEssentials
 				throw new ApplicationException("Could not create/set EAGLContext");
 			}
 			
-			m_renderer = new ES2Renderer(m_context, (CAEAGLLayer)LayerClass());
+			m_renderer = new ES2Renderer();
+			m_renderer.InitWithContext(m_context, (CAEAGLLayer)LayerClass());
 			
 			Animating = false;
 			displayLinkSupported = false;

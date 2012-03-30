@@ -12,6 +12,8 @@ using System;
 using MonoTouch.Foundation;
 using OpenTK.Graphics.ES20;
 using System.Drawing;
+using System.Runtime.InteropServices;
+using System.Text;
 
 namespace iOSGLEssentials
 {	
@@ -19,16 +21,12 @@ namespace iOSGLEssentials
 	{	
 		#region Members
 		
-		uint m_defaultFBOName;
+		protected int m_defaultFBOName;
 		
 		const int POS_ATTRIB_IDX = 1;
 		const int NORMAL_ATTRIB_IDX = 2;
 		const int TEXCOORD_ATTRIB_IDX = 3;
 		#endregion
-		
-		public OpenGLRenderer ()
-		{
-		}
 		
 		#region GL Members
 	    void BufferOffset(int i)
@@ -37,35 +35,212 @@ namespace iOSGLEssentials
 		}
 		
 #if RENDER_REFLECTION
-		DemoModel m_quadModel;
-		All m_quadPrimType;
-		All m_quadElementType;
-		int m_quadNumElements;
-		int m_reflectVAOName;
-		int m_reflectTexName;
-		int m_reflectFBOName;
-		int m_reflectWidth;
-		int m_reflectHeight;
-		int m_reflectPrgName;
-		int m_reflectModelViewUniformIdx;
-		int m_reflectProjectionuniformIdx;
-		int m_reflectNormalMatrixUniformIdx;
+		protected DemoModel m_quadModel;
+		protected All m_quadPrimType;
+		protected All m_quadElementType;
+		protected int m_quadNumElements;
+		protected int m_reflectVAOName;
+		protected int m_reflectTexName;
+		protected int m_reflectFBOName;
+		protected int m_reflectWidth;
+		protected int m_reflectHeight;
+		protected int m_reflectPrgName;
+		protected int m_reflectModelViewUniformIdx;
+		protected int m_reflectProjectionuniformIdx;
+		protected int m_reflectNormalMatrixUniformIdx;
 #endif
-		int m_characterPrgName;
-		int m_characterMvpUniformIdx;
-		int m_characterVAOName;
-		int m_characterTexName;
-		DemoModel m_characterModel;
-		All m_characterPrimType;
-		All m_characterElementType;
-		int m_characterNumElements;
-		float m_characterAngle;
+		protected int m_characterPrgName;
+		protected int m_characterMvpUniformIdx;
+		protected int m_characterVAOName;
+		protected int m_characterTexName;
+		protected DemoModel m_characterModel;
+		protected All m_characterPrimType;
+		protected All m_characterElementType;
+		protected int m_characterNumElements;
+		protected float m_characterAngle;
 		
-		int m_viewWidth;
-		int m_viewHeight;
+		protected int m_viewWidth;
+		protected int m_viewHeight;
 		
-		bool m_useVBOs;
+		protected bool m_useVBOs;
 		#endregion
+		
+		public OpenGLRenderer ()
+		{
+		}
+		
+		protected void InitWithDefaultFBO(int defaultFBOName)
+		{
+			Console.WriteLine(string.Format("{0} {1}", GL.GetString(StringName.Renderer), GL.GetString(StringName.Version)));
+			
+			////////////////////////////////////////////////////
+			// Build all of our and setup initial state here  //
+			// Don't wait until our real time run loop begins //
+			////////////////////////////////////////////////////
+			m_defaultFBOName = defaultFBOName;
+			
+			m_viewWidth = 100;
+			m_viewHeight = 100;
+			
+			m_characterAngle = 0;
+#if USE_VERTEX_BUFFER_OBJECTS
+			m_useVBOs = true;
+#else
+			m_useVBOs = false;
+#endif
+			
+			var filePathName = string.Empty;
+			
+			//////////////////////////////
+			// Load our character model //
+			//////////////////////////////
+			
+			filePathName = NSBundle.MainBundle.PathForResource("demon", "model");
+			m_characterModel = DemoModel.LoadModel(filePathName);
+			
+			// Build Vertex uffer Objects (VBOs) and Vertex Array Objects (VAOs) with our model data
+			m_characterVAOName = BuildVAO(m_characterModel);
+			
+			// Cache the number of element and primtType to use later in our GL.DrawElements calls
+			m_characterNumElements = m_characterModel.NumElements;
+			m_characterPrimType = m_characterModel.PrimType;
+			m_characterElementType = m_characterModel.ElementType;
+			
+			if(m_useVBOs)
+			{
+				//If we're using VBOs we can destroy all this memory since buffers are
+				// loaded into GL and we've saved anything else we need
+				m_characterModel = null;
+			}
+			
+			
+			////////////////////////////////////
+			// Load texture for our character //
+			////////////////////////////////////
+			
+			filePathName = NSBundle.MainBundle.PathForResource("demon", "png");
+			var image = DemoImage.LoadImage(filePathName, false);
+			
+			// Build a texture object with our image data
+			m_characterTexName = BuildTexture(image);
+			
+			////////////////////////////////////////////////////
+			// Load and Setup shaders for character rendering //
+			////////////////////////////////////////////////////
+
+			DemoSource vtxSource = null;
+			DemoSource frgSource = null;
+			
+			filePathName = NSBundle.MainBundle.PathForResource("character", "vsh");
+			vtxSource = DemoSource.LoadSource(filePathName);
+			
+			filePathName = NSBundle.MainBundle.PathForResource("character", "fsh");
+			frgSource = DemoSource.LoadSource(filePathName);
+			
+			// Build program
+			m_characterPrgName = BuildProgramWithVertexSource(vtxSource, frgSource, false, true);
+			
+			m_characterMvpUniformIdx = GL.GetUniformLocation(m_characterPrgName, "modelViewProjectionMatrix");
+			
+			if(m_characterMvpUniformIdx < 0)
+				Console.WriteLine("No modelViewProjectionMatrix in character shader");
+			
+#if RENDER_REFLECTION
+			
+			m_reflectWidth = 512;
+			m_reflectHeight = 512;
+			
+			////////////////////////////////////////////////
+			// Load a model for a quad for the reflection //
+			////////////////////////////////////////////////
+			
+			m_quadModel = DemoModel.LoadQuadModel();
+			
+			// build Vertex Buffer Objects (VBOs) and Vertex Array Object (VAOs) with our model data
+			m_reflectVAOName = BuildVAO(m_quadModel);
+			
+			// Cache the number of element and prim type to use later in our GL.DrawElements calls
+			m_quadNumElements = m_quadModel.NumElements;
+			m_quadPrimType = m_quadModel.PrimType;
+			m_quadElementType = m_quadModel.ElementType;
+			
+			if(m_useVBOs)
+			{
+				// Release quad Model;
+				m_quadModel = null;
+			}
+			
+			/////////////////////////////////////////////////////
+			// Create texture and FBO for reflection rendering //
+			/////////////////////////////////////////////////////
+			
+			m_reflectFBOName = BuildFBOWithWidth(m_reflectWidth, m_reflectHeight);
+			
+			// Get the texture we created in buildReflectFBO by binding the
+			// reflection FBO and getting the buffer attached to color 0
+			GL.BindFramebuffer(All.Framebuffer, m_reflectFBOName);
+			
+			int iReflectTexName = 0;
+			
+			GL.GetFramebufferAttachmentParameter(All.Framebuffer, All.ColorAttachment0, All.FramebufferAttachmentObjectName, ref iReflectTexName);
+			
+			m_reflectTexName = iReflectTexName;
+			
+			/////////////////////////////////////////////////////
+			// Load and setup shaders for reflection rendering //
+			/////////////////////////////////////////////////////
+			
+			filePathName = NSBundle.MainBundle.PathForResource("reflect", "vsh");
+			vtxSource = DemoSource.LoadSource(filePathName);
+			
+			filePathName = NSBundle.MainBundle.PathForResource("reflect", "fsh");
+			frgSource = DemoSource.LoadSource (filePathName);
+			
+			// Build Program
+			m_reflectPrgName = BuildProgramWithVertexSource(vtxSource, frgSource, true, false);
+			
+			m_reflectModelViewUniformIdx = GL.GetUniformLocation(m_reflectPrgName, "modelViewMatrix");
+			
+			if(m_reflectModelViewUniformIdx < 0)
+				Console.WriteLine("No modelViewMatrix in reflection shader");
+			
+			m_reflectProjectionuniformIdx = GL.GetUniformLocation(m_reflectPrgName, "modelViewProjectionMatrix");
+			
+			if(m_reflectProjectionuniformIdx < 0)
+				Console.WriteLine("No modelViewProjectionMatrix in reflection shader");
+			
+			m_reflectNormalMatrixUniformIdx = GL.GetUniformLocation(m_reflectPrgName, "normalMatrix");
+			
+			if(m_reflectNormalMatrixUniformIdx <0)
+				Console.WriteLine("No normalMatrix in reflection shader");
+
+#endif // RENDER_REFLECTION
+			
+			////////////////////////////////////////////////
+			// Set up OpenGL state that will never change //
+			////////////////////////////////////////////////
+			
+			// Depth test will always be enabled
+			GL.Enable(All.DepthTest);
+			
+			// We will always cull back faces for better performance
+			GL.Enable(All.CullFace);
+			
+			// Always use this clear color
+			GL.ClearColor(.5f, .4f, .5f, 1.0f);
+			
+			// Draw our scene once without presenting the rendered image.
+			// This is done in order to pre-warm OpenGL
+			// We don't need to present the buffer since we don't actually want the
+			// user to see this, we're only drawing as a pre-warm stage
+			Render();
+			
+			// Reset the m_characterAngle which is incremented in render
+			m_characterAngle = 0;
+			
+			// Check for errors to make sure all of our setup went ok
+			GetGLError();
+		}
 		
 		#region Public Methods
 		public void ResizeWithWidth(int width, int height)
@@ -76,7 +251,7 @@ namespace iOSGLEssentials
 			m_viewHeight = height;
 		}
 		
-		public void Render()
+		public virtual void Render()
 		{
 			// Set up the modelview and projection matricies
 			var modelView = new float[16];
@@ -112,7 +287,7 @@ namespace iOSGLEssentials
 			GL.UniformMatrix4(m_characterMvpUniformIdx, 1, false, mvp);
 			
 			// Bind our vertex array object
-			//GL.Vertex
+			GL.Oes.BindVertexArray(m_characterVAOName);
 			
 			// Bind the texture to be used
 			GL.BindTexture(All.Texture2D, m_characterTexName);
@@ -159,6 +334,9 @@ namespace iOSGLEssentials
 			
 			// Bind the texture to be used
 			GL.BindTexture(All.Texture2D, m_characterTexName);
+			
+			// Bind our vertex array object
+			GL.Oes.BindVertexArray(m_characterVAOName);
 			
 			// Cull back faces now that we no longer render
 			// with an inverted matrix
@@ -217,6 +395,8 @@ namespace iOSGLEssentials
 			//   mipmaps here
 			GL.GenerateMipmap(All.Texture2D);
 #endif
+			// Bind our vertex array object
+			GL.Oes.BindVertexArray(m_reflectVAOName);
 			
 			// Draw our reflection plane
 			if(m_useVBOs)
@@ -253,17 +433,524 @@ namespace iOSGLEssentials
 			return 0;
 		}
 		
-		int BuildVAO(DemoModel model)
+		unsafe int BuildVAO(DemoModel model)
 		{
 			int vaoName = 0;
 			
 			// Create a vertex array object (VAO) to cache model parameters
+			GL.Oes.GenVertexArrays(1, out vaoName);
+			GL.Oes.BindVertexArray(vaoName);
+	
+			if(m_useVBOs)
+			{
+				int posBufferName = 0;
+				
+				// Creat a vertex buffer object (VBO) to store positions
+				GL.GenBuffers(1, out posBufferName);
+				
+				// Allocate and load position data into the VBO
+				//int size = (int) model.PositionArraySize;
+				//fixed (void *ptr = &size) {
+				//	GL.BufferData(All.ArrayBuffer, new IntPtr (ptr), model.Positions, All.StaticDraw);
+				//}
+				GL.BufferData(All.ArrayBuffer, (IntPtr)model.PositionArraySize, model.Positions, All.StaticDraw);
+				
+				// Enable the position attribute for this VAO
+				GL.EnableVertexAttribArray(POS_ATTRIB_IDX);
+				
+				// Get the size of the position type so we can set the stride properly
+				var posTypeSize = GetGLTypeSize(model.PositionType);
+				
+				// Setup parameters for position attribute in the VAO including,
+				// size, type, stride, and offset in the currently bound VAO
+				// This also attaches the position VBO to the VAO
+				GL.VertexAttribPointer(POS_ATTRIB_IDX, 		// What attribute index will this array feed in the vertex shader (see BuildProgram)
+				                       model.PositionSize,	// How many element are there per position?
+				                       model.PositionType,  // What is the type of this data?
+				                       false,				// Do we want to normalize this data (0-1 range for fixed-point types)
+				                       model.PositionSize * posTypeSize, // What is the stride (i.e. bytes between position)?
+				                       new int[0]);
+				
+				if(model.Normals != null)
+				{
+					int normalBufferName = 0;
+					
+					// Create a vertex buffer object (VBO) to store positions
+					GL.GenBuffers(1, out normalBufferName);
+					GL.BindBuffer(All.ArrayBuffer, normalBufferName);
+					
+					// Allocate and load normal data into the VBO
+					GL.BufferData(All.ArrayBuffer, (IntPtr)model.NormalArraySize, model.Normals, All.StaticDraw);
+					
+					// Enable the normal attribute for this VAO
+					GL.EnableVertexAttribArray(NORMAL_ATTRIB_IDX);
+					
+					// Get the size of the normal type so we can set the stride properly
+					var normalTypeSize = GetGLTypeSize(model.NormalType);
+					
+					// Set up parameters for position attribute in the VAO including,
+					// size, type, stride, and offset in the currently bound VAO
+					// This also attaches the position VBO to the VAO
+					GL.VertexAttribPointer(NORMAL_ATTRIB_IDX, // What attribue index will this array feed in the vertex shader
+					                       model.NormalSize,  // How many elements are there per normal?
+					                       model.NormalType,  // What is the type of this data?
+					                       false,			  // Do we want to normalize this data (0-1 range for fixed-point types)
+					                       model.NormalSize * normalTypeSize, // What is the stride.
+					                       new int[0]);
+				}
+				
+				if(model.TexCoords != null)
+				{
+					int texcoordBufferName = 0;
+					
+					// Create a VBO to store texcoords
+					GL.GenBuffers(1, out texcoordBufferName);
+					GL.BindBuffer(All.ArrayBuffer, texcoordBufferName);
+					
+					// Allocate and load texcoord data into the VBO
+					GL.BufferData(All.ArrayBuffer, (IntPtr)model.TexCoordArraySize, model.TexCoords, All.StaticDraw);
+					
+					// Enable the texcoord attribute for this VAO
+					GL.EnableVertexAttribArray(TEXCOORD_ATTRIB_IDX);
+					
+					// Get the size of the texcoord type so we can set the stride properly
+					var texcoordTypeSize = GetGLTypeSize(model.TexCoordType);
+					
+					// Set up parameters for texcoord attribute in the VAO including,
+					// size, type, stride, and oofset in the currently bound VAO
+					// This also attaches the texcoord VBO to VAO
+					GL.VertexAttribPointer(TEXCOORD_ATTRIB_IDX, // What attribute index will this array feed in the vertex shader
+					                       model.TexCoordsSize, // How many elements are there per texture coord?
+					                       model.TexCoordType,  // What is the type of this data in the array?
+					                       true,				// Do we want to normalize this data
+					                       model.TexCoordsSize * texcoordTypeSize, // What is the stride
+					                       new int[0]);
+				}
+				
+				int elementBufferName = 0;
+				
+				// Create a VBO to vertex array elements
+				// This also attaches the element array buffer to the VAO
+				GL.GenBuffers(1, out elementBufferName);
+				GL.BindBuffer(All.ArrayBuffer, elementBufferName);
+				
+				// Allocate and load vertex array element data into VBO
+				GL.BufferData(All.ArrayBuffer, (IntPtr)model.ElementArraySize, model.Elements, All.StaticDraw);
+			}
+			else{
+				
+				// Enable the position attribute for this VAO
+				GL.EnableVertexAttribArray(POS_ATTRIB_IDX);
+				
+				// Get the size of the position type so we can set the stride propertly
+				var posTypeSize = GetGLTypeSize(model.PositionType);
+				
+				// Set up parameters for position attribute in the VAO including,
+				// size, type, stride, and offset in the currently bound VAO
+				// This also attaches the position VBO to the VAO
+				GL.VertexAttribPointer(POS_ATTRIB_IDX,  // What attibute index will this array feed in the vertex shader? (also see buildProgram)
+							 		 model.PositionSize,  // How many elements are there per position?
+									 model.PositionType,  // What is the type of this data
+							  		 false,				// Do we want to normalize this data (0-1 range for fixed-pont types)
+							     	 model.PositionSize*posTypeSize, // What is the stride (i.e. bytes between positions)?
+							  		 model.Positions);    // Where is the position data in memory?
+				
+				if(model.Normals != null)
+				{			
+					// Enable the normal attribute for this VAO
+					GL.EnableVertexAttribArray(NORMAL_ATTRIB_IDX);
+					
+					// Get the size of the normal type so we can set the stride properly
+					var normalTypeSize = GetGLTypeSize(model.NormalType);
+					
+					// Set up parmeters for position attribute in the VAO including, 
+					//   size, type, stride, and offset in the currenly bound VAO
+					// This also attaches the position VBO to the VAO
+					GL.VertexAttribPointer(NORMAL_ATTRIB_IDX,	// What attibute index will this array feed in the vertex shader (see buildProgram)
+										  model.NormalSize,	// How many elements are there per normal?
+										  model.NormalType,	// What is the type of this data?
+										  false,				// Do we want to normalize this data (0-1 range for fixed-pont types)
+										  model.NormalSize * normalTypeSize, // What is the stride (i.e. bytes between normals)?
+										  model.Normals);	    // Where is normal data in memory?
+				}
+				
+				if(model.TexCoords != null)
+				{
+					// Enable the texcoord attribute for this VAO
+					GL.EnableVertexAttribArray(TEXCOORD_ATTRIB_IDX);
+					
+					// Get the size of the texcoord type so we can set the stride properly
+					var texcoordTypeSize = GetGLTypeSize(model.TexCoordType);
+					
+					// Set up parmeters for texcoord attribute in the VAO including, 
+					//   size, type, stride, and offset in the currenly bound VAO
+					// This also attaches the texcoord array in memory to the VAO	
+					GL.VertexAttribPointer(TEXCOORD_ATTRIB_IDX,	// What attibute index will this array feed in the vertex shader (see buildProgram)
+										  model.TexCoordsSize,	// How many elements are there per texture coord?
+										  model.TexCoordType,	// What is the type of this data in the array?
+										  false,				// Do we want to normalize this data (0-1 range for fixed-point types)
+										  model.TexCoordsSize * texcoordTypeSize,  // What is the stride (i.e. bytes between texcoords)?
+										  model.TexCoords);	// Where is the texcood data in memory?
+				}
+
+			}			
+			
+			GetGLError();
 			
 			return vaoName;
 		}
 		
-		public void Dispose()
+		void DestroyVAO(int vaoName)
 		{
+				int index = 0;
+				int bufName = -1;
+				
+				// Bind the VAO so we can get data from it
+				GL.Oes.BindVertexArray(vaoName);
+				
+				// For every possible attribute set in the VAO
+				for(index = 0; index < 16; index++)
+				{
+					// Get the VBO set for that attibute
+					GL.GetVertexAttrib(index , All.VertexAttribArrayBufferBinding, ref bufName);
+					
+					// If there was a VBO set...
+					if(bufName != -1)
+					{
+						//...delete the VBO
+						GL.DeleteBuffers(1, ref bufName);
+					}
+				}
+				
+				// Get any element array VBO set in the VAO
+				GL.GetInteger(All.ElementArrayBufferBinding, ref bufName);
+				
+				// If there was a element array VBO set in the VAO
+				if(bufName != -1)
+				{
+					//...delete the VBO
+					GL.DeleteBuffers(1, ref bufName);
+				}
+				
+				// Finally, delete the VAO
+				GL.Oes.DeleteVertexArrays(1, ref vaoName);
+				
+				GetGLError();
+		}
+		
+		int BuildTexture(DemoImage image)
+		{
+			int texName = 0; 
+			
+			// Create a texture object to apply to model
+			GL.GenTextures(1, out texName);
+			GL.BindTexture(All.Texture2D, texName);
+			
+			// Set up filter and wrap modes for this texture object
+			GL.TexParameter(All.Texture2D, All.TextureWrapS, (int)All.ClampToEdge);
+			GL.TexParameter(All.Texture2D, All.TextureWrapT, (int)All.ClampToEdge);
+			GL.TexParameter(All.Texture2D, All.TextureMagFilter, (int)All.Linear);
+			GL.TexParameter(All.Texture2D, All.TextureMinFilter, (int)All.LinearMipmapLinear);
+			
+			// Indicate that pixel rows are tightly packed 
+			//  (defaults to stride of 4 which is kind of only good for
+			//  RGBA or FLOAT data types)
+			GL.PixelStore(All.UnpackAlignment, 1);
+			
+			// Allocate and load image data into texture
+			GL.TexImage2D<byte>(All.Texture2D, 0, (int)image.Format, image.Width, image.Height, 0,
+						 image.Format, image.Type, image.Data);
+		
+			// Create mipmaps for this texture for better image quality
+			GL.GenerateMipmap(All.Texture2D);
+			
+			GetGLError();
+			
+			return texName;
+		}
+		
+		void DeleteFBOAttachment(All attachment)
+		{    
+		    int param = 0;
+		    int objName = 0;
+			
+		    GL.GetFramebufferAttachmentParameter(All.Framebuffer, attachment,
+		                                          All.FramebufferAttachmentObjectType,
+		                                          ref param);
+			
+		    if((int)All.Renderbuffer == param)
+		    {
+		        GL.GetFramebufferAttachmentParameter(All.Framebuffer, attachment,
+		                                              All.FramebufferAttachmentObjectName,
+		                                              ref param);
+				
+		        objName = param;
+		        GL.DeleteRenderbuffers(1, ref objName);
+		    }
+		    else if((int)All.Texture == param)
+		    {
+		        
+		        GL.GetFramebufferAttachmentParameter(All.Framebuffer, attachment,
+		                                              All.FramebufferAttachmentObjectName,
+		                                              ref param);
+				
+		        objName = param;
+		        GL.DeleteTextures(1, ref objName);
+		    }
+		    
+		}		
+		
+		void DestroyFBO(int fboName)
+		{ 
+			if(0 == fboName)
+			{
+				return;
+			}
+		    
+		    GL.BindFramebuffer(All.Framebuffer, fboName);
+			
+			
+		    int maxColorAttachments = 1;
+			
+			int colorAttachment = 0; 
+			
+			// For every color buffer attached
+		    for(colorAttachment = 0; colorAttachment < maxColorAttachments; colorAttachment++)
+		    {
+				// Delete the attachment
+				DeleteFBOAttachment((All)((int)All.ColorAttachment0 + colorAttachment));
+			}
+			
+			// Delete any depth or stencil buffer attached
+		    DeleteFBOAttachment(All.DepthAttachment);
+			
+		    DeleteFBOAttachment(All.StencilAttachment);
+			
+		    GL.DeleteFramebuffers(1, ref fboName);
+		}
+		
+		int BuildFBOWithWidth(int width, int height)
+		{
+			int fboName = 0;
+	
+			int colorTexture = 0;
+			
+			// Create a texture object to apply to model
+			GL.GenTextures(1, out colorTexture);
+			GL.BindTexture(All.Texture2D, colorTexture);
+			
+			// Set up filter and wrap modes for this texture object
+			GL.TexParameter(All.Texture2D, All.TextureWrapS, (int)All.ClampToEdge);
+			GL.TexParameter(All.Texture2D, All.TextureWrapT, (int)All.ClampToEdge);
+			GL.TexParameter(All.Texture2D, All.TextureMagFilter, (int)All.Linear);
+		
+			GL.TexParameter(All.Texture2D, All.TextureMinFilter, (int)All.Linear);
+			
+			// Allocate a texture image with which we can render to
+			// Pass NULL for the data parameter since we don't need to load image data.
+			//     We will be generating the image by rendering to this texture
+			byte[] dummy = null;
+			GL.TexImage2D<byte>(All.Texture2D, 0, (int)All.Rgba, width, height, 0,
+						 All.Rgba, All.UnsignedByte, dummy);
+			
+			int depthRenderbuffer = 0;
+			GL.GenRenderbuffers(1, out depthRenderbuffer);
+			GL.BindRenderbuffer(All.Renderbuffer, depthRenderbuffer);
+			GL.RenderbufferStorage(All.Renderbuffer, All.DepthComponent16, width, height);
+			
+			GL.GenFramebuffers(1, out fboName);
+			GL.BindFramebuffer(All.Framebuffer, fboName);	
+			GL.FramebufferTexture2D(All.Framebuffer, All.ColorAttachment0, All.Texture2D, colorTexture, 0);
+			GL.FramebufferRenderbuffer(All.Framebuffer, All.DepthAttachment, All.Renderbuffer, depthRenderbuffer);
+			
+			if(GL.CheckFramebufferStatus(All.Framebuffer) != All.FramebufferComplete)
+			{
+				Console.WriteLine("failed to make complete framebuffer object %x", Enum.GetName (typeof(All), GL.CheckFramebufferStatus(All.Framebuffer)));
+				DestroyFBO(fboName);
+				return 0;
+			}
+			
+			GetGLError();
+			
+			return fboName;
+		}		
+		
+		int BuildProgramWithVertexSource(DemoSource vertexSource, DemoSource fragmentSource, bool hasNormal, bool hasTexcoord)
+		{
+			int prgName = 0;
+			int logLength = 0, status = 0;
+			
+			// String to pass to Gl.ShaderSource
+			var sourceString = string.Empty;
+			
+			// Determine if GLSL version 140 is supported by this context.
+			// We'll use this info to generate a GLSL shader source string
+			// with the proper version preprocessor string prepended
+			float glLanguageVersion;
+			
+			glLanguageVersion = Convert.ToSingle(GL.GetString(All.ShadingLanguageVersion));
+			
+			//  All.ShadingLanguageVersion returns the version standard version form
+			//  with decimals, but the GLSL version preprocessor directive simply
+			//  uses integers (thus 1.10 should 110 and 1.40 should be 140, etc.)
+			//  We multiply the floating point number by 100 to get a proper
+			//  number for the GLSL preprocessor directive
+			int version = Convert.ToInt32(100 * glLanguageVersion);
+			
+			prgName = GL.CreateProgram();
+			
+			// Indicate the attribute indicies on which vertex arrays will be
+			// set with GL.VertexAttribPointer
+			// See BuildVAO to see where vertex array are actually set
+			GL.BindAttribLocation(prgName, POS_ATTRIB_IDX, "inPosition");
+			
+			if(hasNormal)
+			{
+				GL.BindAttribLocation(prgName, NORMAL_ATTRIB_IDX, "inNormal");
+			}
+			
+			if(hasTexcoord)
+			{
+				GL.BindAttribLocation(prgName, TEXCOORD_ATTRIB_IDX, "inTexcoord");
+			}
+			
+			//////////////////////////////////////
+			// Specify and compile VertexShader //
+			//////////////////////////////////////
+			
+			sourceString = string.Format("#version {0}\n{1}", version, vertexSource.String);
+			
+			int vertexShader;
+			if(!CompileShader(out vertexShader, All.VertexShader, sourceString))
+			{
+				Console.WriteLine("Could not Compile Vertex Shader");
+				return 0;
+			}
+			
+			GL.AttachShader(prgName, vertexShader);
+			
+			/////////////////////////////////////////
+			// Specify and compile Fragment Shader //
+			/////////////////////////////////////////
+			
+			sourceString = string.Format("#version {0}\n{1}", version, fragmentSource.String);
+			
+			int fragShader;
+			if(!CompileShader(out fragShader, All.FragmentShader, sourceString))
+			{
+				Console.WriteLine("Could not Compile Fragment Shader");
+				return 0;
+			}
+			
+			// Attach the fragment shader to our program
+			GL.AttachShader(prgName, fragShader);
+			
+			//////////////////////
+			// Link the program //
+			//////////////////////
+			
+			GL.LinkProgram(prgName);
+			GL.GetProgram(prgName, All.InfoLogLength, ref logLength);
+			if(logLength > 0)
+			{
+				var log = new StringBuilder(logLength);
+				GL.GetProgramInfoLog(prgName, logLength, out logLength, log);
+				Console.WriteLine("Program link log: " + log.ToString());
+			}
+			
+			GL.GetProgram(prgName, All.LinkStatus, ref status);
+			if(status == 0)
+			{
+				Console.WriteLine("Failed to link program");
+				return 0;
+			}
+			
+			GL.ValidateProgram(prgName);
+			GL.GetProgram(prgName, All.InfoLogLength, ref logLength);
+			if(logLength > 0)
+			{
+				var log = new StringBuilder(logLength);
+				GL.GetProgramInfoLog(prgName, logLength, out logLength, log);
+				Console.WriteLine("Program validate log: " + log.ToString());
+			}
+			
+			GL.GetProgram(prgName, All.ValidateStatus, ref status);
+			if(status == 0)
+			{
+				Console.WriteLine("Failed to validate program");
+				return 0;
+			}
+			
+			GL.UseProgram(prgName);
+		
+			///////////////////////////////////////
+			// Setup common program input points //
+			///////////////////////////////////////
+			
+			int sampleLoc = GL.GetUniformLocation(prgName, "diffuseTexture");
+			
+			// Indicate that the diffuse texture will be bound to texture uint 0
+			var uint0 = 0;
+			GL.Uniform1 (sampleLoc, uint0);
+			
+			GetGLError();
+			
+			return prgName;
+		}
+		
+		bool CompileShader (out int shader, All type, string path)
+		{
+			string shaderProgram = System.IO.File.ReadAllText (path);
+			int len = shaderProgram.Length, status = 0;
+			shader = GL.CreateShader (type);
+
+			GL.ShaderSource (shader, 1, new string [] { shaderProgram }, ref len);
+			GL.CompileShader (shader);
+			GL.GetShader (shader, All.CompileStatus, ref status);
+			
+			if (status == 0) {
+				GL.DeleteShader (shader);
+				return false;
+			}
+			return true;
+		}
+		
+		unsafe void DestroyProgram(int prgName)
+		{
+			if(0 == prgName)
+				return;
+			
+			int shaderNum;
+			int shaderCount = 0;
+			
+			// Get the number of attached shaders
+			GL.GetProgram(prgName, All.AttachedShaders, ref shaderCount);
+			
+			var shaders = new int[shaderCount * sizeof(int)];
+			
+			// Get the names of the shaders attached to the program
+			GL.GetAttachedShaders(prgName, 
+			                      shaderCount,
+			                      new int[] { shaderCount },
+			                      shaders);
+			
+			// Delete the shaders attached to the program
+			for(shaderNum = 0; shaderNum < shaderCount; shaderNum++)
+			{
+				GL.DeleteShader(shaders[shaderNum]);
+			}
+			
+			GL.DeleteProgram(prgName);
+			GL.UseProgram(0);
+		}
+		
+		void GetGLError()
+		{
+			var error = GL.GetError();
+			while(error != ErrorCode.NoError)
+			{
+				Console.WriteLine("GLError " +  Enum.GetName(typeof(ErrorCode), error)); //GLUtil.GetGLErrorString(error));
+			}
 		}
 		#endregion
 	}

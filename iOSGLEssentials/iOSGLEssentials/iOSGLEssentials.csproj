@@ -64,7 +64,9 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="monotouch" />
-    <Reference Include="OpenTK" />
+    <Reference Include="OpenTK-1.0">
+      <HintPath>..\..\..\..\..\..\Developer\MonoTouch\usr\lib\mono\2.1\OpenTK-1.0.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -83,9 +85,22 @@
     <Compile Include="MatrixUtil.cs" />
     <Compile Include="VectorUtil.cs" />
     <Compile Include="GLUtil.cs" />
+    <Compile Include="DemoImage.cs" />
+    <Compile Include="DemoSource.cs" />
+    <Compile Include="DataConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="iOSGLEssentialsViewController.xib" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Shaders\" />
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Shaders\character.fsh" />
+    <Content Include="Shaders\character.vsh" />
+    <Content Include="Shaders\reflect.fsh" />
+    <Content Include="Shaders\reflect.vsh" />
+  </ItemGroup>
 </Project>
