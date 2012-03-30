@@ -15,8 +15,8 @@ namespace iOSGLEssentials
 	{
 		// class-level declarations
 		UIWindow window;
-		iOSGLEssentialsViewController viewController;
-
+		
+		
 		//
 		// This method is invoked when the application has loaded and is ready to run. In this 
 		// method you should instantiate the window, load the UI into it and then make the window
@@ -26,13 +26,39 @@ namespace iOSGLEssentials
 		//
 		public override bool FinishedLaunching (UIApplication app, NSDictionary options)
 		{
-			window = new UIWindow (UIScreen.MainScreen.Bounds);
+			window = new UIWindow (UIScreen.MainScreen.Bounds)
+			{
+				RootViewController = new iOSGLEssentialsViewController()
+			};
 			
-			viewController = new iOSGLEssentialsViewController ();
-			window.RootViewController = viewController;
 			window.MakeKeyAndVisible ();
 			
 			return true;
+		}
+		
+		public override void OnResignActivation (UIApplication application)
+		{
+			//glView.StopAnimation();
+		}
+		
+		public override void DidEnterBackground (UIApplication application)
+		{
+			//glView.StopAnimation();
+		}
+		
+		public override void WillEnterForeground (UIApplication application)
+		{
+			//glView.StartAnimation();
+		}
+		
+		public override void OnActivated (UIApplication application)
+		{
+			//glView.StartAnimation();
+		}
+		
+		public override void WillTerminate (UIApplication application)
+		{
+			//glView.StopAnimation();
 		}
 	}
 }

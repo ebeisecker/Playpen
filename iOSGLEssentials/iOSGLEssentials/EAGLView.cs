@@ -4,10 +4,11 @@ using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 using MonoTouch.ObjCRuntime;
 using MonoTouch.CoreAnimation;
+using System.Drawing;
 
 namespace iOSGLEssentials
 {
-	public class EAGLEView : UIView
+	public class EAGLView : UIView
 	{
 		#region Members
 		ES2Renderer m_renderer;
@@ -56,11 +57,15 @@ namespace iOSGLEssentials
 			}
 		}
 		#endregion
-		
-		public EAGLEView (NSCoder coder)
-			: base(coder)
+		[Export("initWithFrame:")]
+		public EAGLView (RectangleF frame)
+			:base(frame)
 		{
-			CAEAGLLayer eaglLayer = (CAEAGLLayer)LayerClass();
+		}
+		
+		public void Initialize()
+		{ 
+			CAEAGLLayer eaglLayer = (CAEAGLLayer)Layer;
 			
 			eaglLayer.Opaque = true;
 			eaglLayer.DrawableProperties = NSDictionary.FromObjectsAndKeys(
@@ -75,7 +80,7 @@ namespace iOSGLEssentials
 			}
 			
 			m_renderer = new ES2Renderer();
-			m_renderer.InitWithContext(m_context, (CAEAGLLayer)LayerClass());
+			m_renderer.InitWithContext(m_context, (CAEAGLLayer)Layer);
 			
 			Animating = false;
 			displayLinkSupported = false;
@@ -93,9 +98,21 @@ namespace iOSGLEssentials
 		}
 	
 		[Export("layerClass")]
-		public static object LayerClass()
+		public static Class LayerClass()
 		{
-			return new CAEAGLLayer();
+			return new Class(typeof(CAEAGLLayer));
+		}
+		
+		public void DrawView()
+		{
+			EAGLContext.SetCurrentContext(m_context);
+			m_renderer.Render();
+		}
+		
+		public override void LayoutSubviews()
+		{
+			m_renderer.ResizeFromLayer((CAEAGLLayer)this.Layer);
+			DrawView();
 		}
 		
 		#region Public Methods
@@ -128,21 +145,17 @@ namespace iOSGLEssentials
 			{
 				if(displayLinkSupported)
 				{
+					displayLink.Invalidate();
 					displayLink = null;
 				}
 				else
 				{
+					animationTimer.Invalidate();
 					animationTimer = null;
 				}
 				
 				Animating = false;
 			}
-		}
-		
-		public void DrawView()
-		{
-			EAGLContext.SetCurrentContext(m_context);
-			m_renderer.Render();
 		}
 		
 		public new void Dispose ()

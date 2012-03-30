@@ -37,7 +37,7 @@ namespace iOSGLEssentials
 #if RENDER_REFLECTION
 		protected DemoModel m_quadModel;
 		protected All m_quadPrimType;
-		protected All m_quadElementType;
+		protected DrawElementsType m_quadElementType;
 		protected int m_quadNumElements;
 		protected int m_reflectVAOName;
 		protected int m_reflectTexName;
@@ -55,7 +55,7 @@ namespace iOSGLEssentials
 		protected int m_characterTexName;
 		protected DemoModel m_characterModel;
 		protected All m_characterPrimType;
-		protected All m_characterElementType;
+		protected DrawElementsType m_characterElementType;
 		protected int m_characterNumElements;
 		protected float m_characterAngle;
 		
@@ -95,7 +95,7 @@ namespace iOSGLEssentials
 			// Load our character model //
 			//////////////////////////////
 			
-			filePathName = NSBundle.MainBundle.PathForResource("demon", "model");
+			filePathName = NSBundle.MainBundle.PathForResource("GLData/demon", "model");
 			m_characterModel = DemoModel.LoadModel(filePathName);
 			
 			// Build Vertex uffer Objects (VBOs) and Vertex Array Objects (VAOs) with our model data
@@ -118,7 +118,7 @@ namespace iOSGLEssentials
 			// Load texture for our character //
 			////////////////////////////////////
 			
-			filePathName = NSBundle.MainBundle.PathForResource("demon", "png");
+			filePathName = NSBundle.MainBundle.PathForResource("GLData/demon", "png");
 			var image = DemoImage.LoadImage(filePathName, false);
 			
 			// Build a texture object with our image data
@@ -131,10 +131,10 @@ namespace iOSGLEssentials
 			DemoSource vtxSource = null;
 			DemoSource frgSource = null;
 			
-			filePathName = NSBundle.MainBundle.PathForResource("character", "vsh");
+			filePathName = NSBundle.MainBundle.PathForResource("Shaders/character", "vsh");
 			vtxSource = DemoSource.LoadSource(filePathName);
 			
-			filePathName = NSBundle.MainBundle.PathForResource("character", "fsh");
+			filePathName = NSBundle.MainBundle.PathForResource("Shaders/character", "fsh");
 			frgSource = DemoSource.LoadSource(filePathName);
 			
 			// Build program
@@ -178,11 +178,11 @@ namespace iOSGLEssentials
 			
 			// Get the texture we created in buildReflectFBO by binding the
 			// reflection FBO and getting the buffer attached to color 0
-			GL.BindFramebuffer(All.Framebuffer, m_reflectFBOName);
+			GL.BindFramebuffer(FramebufferTarget.Framebuffer, m_reflectFBOName);
 			
 			int iReflectTexName = 0;
 			
-			GL.GetFramebufferAttachmentParameter(All.Framebuffer, All.ColorAttachment0, All.FramebufferAttachmentObjectName, ref iReflectTexName);
+			GL.GetFramebufferAttachmentParameter(FramebufferTarget.Framebuffer, FramebufferSlot.ColorAttachment0, FramebufferParameterName.FramebufferAttachmentObjectName, out iReflectTexName);
 			
 			m_reflectTexName = iReflectTexName;
 			
@@ -190,10 +190,10 @@ namespace iOSGLEssentials
 			// Load and setup shaders for reflection rendering //
 			/////////////////////////////////////////////////////
 			
-			filePathName = NSBundle.MainBundle.PathForResource("reflect", "vsh");
+			filePathName = NSBundle.MainBundle.PathForResource("Shaders/reflect", "vsh");
 			vtxSource = DemoSource.LoadSource(filePathName);
 			
-			filePathName = NSBundle.MainBundle.PathForResource("reflect", "fsh");
+			filePathName = NSBundle.MainBundle.PathForResource("Shaders/reflect", "fsh");
 			frgSource = DemoSource.LoadSource (filePathName);
 			
 			// Build Program
@@ -221,10 +221,10 @@ namespace iOSGLEssentials
 			////////////////////////////////////////////////
 			
 			// Depth test will always be enabled
-			GL.Enable(All.DepthTest);
+			GL.Enable(EnableCap.DepthTest);
 			
 			// We will always cull back faces for better performance
-			GL.Enable(All.CullFace);
+			GL.Enable(EnableCap.CullFace);
 			
 			// Always use this clear color
 			GL.ClearColor(.5f, .4f, .5f, 1.0f);
@@ -260,9 +260,9 @@ namespace iOSGLEssentials
 			
 #if RENDER_REFLECTION
 			
-			GL.BindFramebuffer(All.Framebuffer, m_reflectFBOName);
+			GL.BindFramebuffer(FramebufferTarget.Framebuffer, m_reflectFBOName);
 			
-			GL.Clear((int)All.ColorBufferBit | (int)All.DepthBufferBit);
+			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 			GL.Viewport(0, 0, m_reflectWidth, m_reflectHeight);
 			
 			MatrixUtil.LoadPerspective(ref projection, 90f, (float)m_reflectWidth / (float)m_reflectHeight, 5.0f, 10000f);
@@ -290,28 +290,28 @@ namespace iOSGLEssentials
 			GL.Oes.BindVertexArray(m_characterVAOName);
 			
 			// Bind the texture to be used
-			GL.BindTexture(All.Texture2D, m_characterTexName);
+			GL.BindTexture(TextureTarget.Texture2D, m_characterTexName);
 			
 			// Cull front faces now that everything is flipped
 			// with our inverted reflection transformation matrix
-			GL.CullFace(All.Front);
+			GL.CullFace(CullFaceMode.Front);
 			
 			// Draw our object
 			if(m_useVBOs)
 			{
-				GL.DrawElements(All.Triangles, m_characterNumElements, m_characterElementType, new int[0]);
+				GL.DrawElements(BeginMode.Triangles, m_characterNumElements, m_characterElementType, new int[0]);
 			}
 			else{
-				GL.DrawElements(All.Triangles, m_characterNumElements, m_characterElementType, m_characterModel.Elements);
+				GL.DrawElements(BeginMode.Triangles, m_characterNumElements, m_characterElementType, m_characterModel.Elements);
 			}
 			
 			// Bind our default FBO to render to the screen
-			GL.BindFramebuffer(All.Framebuffer, m_defaultFBOName);
+			GL.BindFramebuffer(FramebufferTarget.Framebuffer, m_defaultFBOName);
 			
 			GL.Viewport(0, 0, m_viewWidth, m_viewHeight);
 #endif // Render_REFLECTION
 			
-			GL.Clear((int)All.ColorBufferBit | (int)All.DepthBufferBit);
+			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 			
 			// Use the program for rendering our character
 			GL.UseProgram(m_characterPrgName);
@@ -333,23 +333,23 @@ namespace iOSGLEssentials
 			GL.UniformMatrix4(m_characterMvpUniformIdx, 1, false, mvp);
 			
 			// Bind the texture to be used
-			GL.BindTexture(All.Texture2D, m_characterTexName);
+			GL.BindTexture(TextureTarget.Texture2D, m_characterTexName);
 			
 			// Bind our vertex array object
 			GL.Oes.BindVertexArray(m_characterVAOName);
 			
 			// Cull back faces now that we no longer render
 			// with an inverted matrix
-			GL.CullFace(All.Back);
+			GL.CullFace(CullFaceMode.Back);
 			
 			// Draw our character
 			// Draw our object
 			if(m_useVBOs)
 			{
-				GL.DrawElements(All.Triangles, m_characterNumElements, m_characterElementType, new int[0]);
+				GL.DrawElements(BeginMode.Triangles, m_characterNumElements, m_characterElementType, new int[0]);
 			}
 			else{
-				GL.DrawElements(All.Triangles, m_characterNumElements, m_characterElementType, m_characterModel.Elements);
+				GL.DrawElements(BeginMode.Triangles, m_characterNumElements, m_characterElementType, m_characterModel.Elements);
 			}
 			
 #if RENDER_REFLECTION
@@ -386,14 +386,14 @@ namespace iOSGLEssentials
 			GL.UniformMatrix3(m_reflectNormalMatrixUniformIdx, 1, false, normalMatrix);
 			
 			// Bind the texture we rendered-to above (i.e. the reflection texture)
-			GL.BindTexture(All.Texture2D, m_reflectTexName);
+			GL.BindTexture(TextureTarget.Texture2D, m_reflectTexName);
 			
 #if !ESSENTIAL_GL_PRACTICES_IOS
 			// Generate mipmaps from the rendered-to base level
 			//   Mipmaps reduce shimmering pixels due to better filtering
 			// This call is not accelarated on iOS 4 so do not use
 			//   mipmaps here
-			GL.GenerateMipmap(All.Texture2D);
+			GL.GenerateMipmap(TextureTarget.Texture2D);
 #endif
 			// Bind our vertex array object
 			GL.Oes.BindVertexArray(m_reflectVAOName);
@@ -401,10 +401,10 @@ namespace iOSGLEssentials
 			// Draw our reflection plane
 			if(m_useVBOs)
 			{
-				GL.DrawElements(All.Triangles, m_quadNumElements, m_quadElementType, new int[0]);
+				GL.DrawElements(BeginMode.Triangles, m_quadNumElements, m_quadElementType, new int[0]);
 			}
 			else{
-				GL.DrawElements(All.Triangles, m_quadNumElements, m_quadElementType, m_quadModel.Elements);
+				GL.DrawElements(BeginMode.Triangles, m_quadNumElements, m_quadElementType, m_quadModel.Elements);
 			}
 #endif // RENDER_REFLECTION
 			
@@ -412,9 +412,23 @@ namespace iOSGLEssentials
 			m_characterAngle++;
 		}
 		
-		unsafe static int GetGLTypeSize(All type)
+		unsafe static int GetGLTypeSize(VertexAttribPointerType type)
 		{
+			
 			switch(type)
+			{
+			case VertexAttribPointerType.UnsignedByte:
+				return sizeof(byte);
+			case VertexAttribPointerType.UnsignedShort:	
+				return sizeof(short);
+			case VertexAttribPointerType.Byte:
+				return sizeof(byte);
+			case VertexAttribPointerType.Float:
+				return sizeof(float);
+			//case VertexAttribPointerType.Fixed:
+				
+			}
+			/*switch(type)
 			{
 			case All.Byte:
 				return sizeof(byte);
@@ -428,7 +442,7 @@ namespace iOSGLEssentials
 				return sizeof(uint);
 			case All.Float:
 				return sizeof(float);
-			}
+			}*/
 			
 			return 0;
 		}
@@ -451,9 +465,9 @@ namespace iOSGLEssentials
 				// Allocate and load position data into the VBO
 				//int size = (int) model.PositionArraySize;
 				//fixed (void *ptr = &size) {
-				//	GL.BufferData(All.ArrayBuffer, new IntPtr (ptr), model.Positions, All.StaticDraw);
+				//	GL.BufferData(BufferTarget.ArrayBuffer, new IntPtr (ptr), model.Positions, BufferUsage.StaticDraw);
 				//}
-				GL.BufferData(All.ArrayBuffer, (IntPtr)model.PositionArraySize, model.Positions, All.StaticDraw);
+				GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)model.PositionArraySize, model.Positions, BufferUsage.StaticDraw);
 				
 				// Enable the position attribute for this VAO
 				GL.EnableVertexAttribArray(POS_ATTRIB_IDX);
@@ -477,10 +491,10 @@ namespace iOSGLEssentials
 					
 					// Create a vertex buffer object (VBO) to store positions
 					GL.GenBuffers(1, out normalBufferName);
-					GL.BindBuffer(All.ArrayBuffer, normalBufferName);
+					GL.BindBuffer(BufferTarget.ArrayBuffer, normalBufferName);
 					
 					// Allocate and load normal data into the VBO
-					GL.BufferData(All.ArrayBuffer, (IntPtr)model.NormalArraySize, model.Normals, All.StaticDraw);
+					GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)model.NormalArraySize, model.Normals, BufferUsage.StaticDraw);
 					
 					// Enable the normal attribute for this VAO
 					GL.EnableVertexAttribArray(NORMAL_ATTRIB_IDX);
@@ -505,10 +519,10 @@ namespace iOSGLEssentials
 					
 					// Create a VBO to store texcoords
 					GL.GenBuffers(1, out texcoordBufferName);
-					GL.BindBuffer(All.ArrayBuffer, texcoordBufferName);
+					GL.BindBuffer(BufferTarget.ArrayBuffer, texcoordBufferName);
 					
 					// Allocate and load texcoord data into the VBO
-					GL.BufferData(All.ArrayBuffer, (IntPtr)model.TexCoordArraySize, model.TexCoords, All.StaticDraw);
+					GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)model.TexCoordArraySize, model.TexCoords, BufferUsage.StaticDraw);
 					
 					// Enable the texcoord attribute for this VAO
 					GL.EnableVertexAttribArray(TEXCOORD_ATTRIB_IDX);
@@ -532,10 +546,10 @@ namespace iOSGLEssentials
 				// Create a VBO to vertex array elements
 				// This also attaches the element array buffer to the VAO
 				GL.GenBuffers(1, out elementBufferName);
-				GL.BindBuffer(All.ArrayBuffer, elementBufferName);
+				GL.BindBuffer(BufferTarget.ArrayBuffer, elementBufferName);
 				
 				// Allocate and load vertex array element data into VBO
-				GL.BufferData(All.ArrayBuffer, (IntPtr)model.ElementArraySize, model.Elements, All.StaticDraw);
+				GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)model.ElementArraySize, model.Elements, BufferUsage.StaticDraw);
 			}
 			else{
 				
@@ -612,7 +626,7 @@ namespace iOSGLEssentials
 				for(index = 0; index < 16; index++)
 				{
 					// Get the VBO set for that attibute
-					GL.GetVertexAttrib(index , All.VertexAttribArrayBufferBinding, ref bufName);
+					GL.GetVertexAttrib(index, VertexAttribParameter.VertexAttribArrayBufferBinding, out bufName);
 					
 					// If there was a VBO set...
 					if(bufName != -1)
@@ -623,7 +637,7 @@ namespace iOSGLEssentials
 				}
 				
 				// Get any element array VBO set in the VAO
-				GL.GetInteger(All.ElementArrayBufferBinding, ref bufName);
+				GL.GetInteger(GetPName.ElementArrayBufferBinding, out bufName);
 				
 				// If there was a element array VBO set in the VAO
 				if(bufName != -1)
@@ -644,45 +658,45 @@ namespace iOSGLEssentials
 			
 			// Create a texture object to apply to model
 			GL.GenTextures(1, out texName);
-			GL.BindTexture(All.Texture2D, texName);
+			GL.BindTexture(TextureTarget.Texture2D, texName);
 			
 			// Set up filter and wrap modes for this texture object
-			GL.TexParameter(All.Texture2D, All.TextureWrapS, (int)All.ClampToEdge);
-			GL.TexParameter(All.Texture2D, All.TextureWrapT, (int)All.ClampToEdge);
-			GL.TexParameter(All.Texture2D, All.TextureMagFilter, (int)All.Linear);
-			GL.TexParameter(All.Texture2D, All.TextureMinFilter, (int)All.LinearMipmapLinear);
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)All.ClampToEdge);
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)All.ClampToEdge);
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)All.Linear);
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.LinearMipmapLinear);
 			
 			// Indicate that pixel rows are tightly packed 
 			//  (defaults to stride of 4 which is kind of only good for
 			//  RGBA or FLOAT data types)
-			GL.PixelStore(All.UnpackAlignment, 1);
+			GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
 			
 			// Allocate and load image data into texture
-			GL.TexImage2D<byte>(All.Texture2D, 0, (int)image.Format, image.Width, image.Height, 0,
-						 image.Format, image.Type, image.Data);
-		
+			GL.TexImage2D<byte>(TextureTarget.Texture2D, 0, image.Format, image.Width, image.Height, 0,
+						 (PixelFormat)Enum.ToObject(typeof(PixelFormat), (int)image.Format), image.Type, image.Data);
+			
 			// Create mipmaps for this texture for better image quality
-			GL.GenerateMipmap(All.Texture2D);
+			GL.GenerateMipmap(TextureTarget.Texture2D);
 			
 			GetGLError();
 			
 			return texName;
 		}
 		
-		void DeleteFBOAttachment(All attachment)
+		void DeleteFBOAttachment(FramebufferSlot attachment)
 		{    
 		    int param = 0;
 		    int objName = 0;
 			
-		    GL.GetFramebufferAttachmentParameter(All.Framebuffer, attachment,
-		                                          All.FramebufferAttachmentObjectType,
-		                                          ref param);
+		    GL.GetFramebufferAttachmentParameter(FramebufferTarget.Framebuffer, attachment,
+		                                          FramebufferParameterName.FramebufferAttachmentObjectType,
+		                                          out param);
 			
-		    if((int)All.Renderbuffer == param)
+		    if((int)RenderbufferTarget.Renderbuffer == param)
 		    {
-		        GL.GetFramebufferAttachmentParameter(All.Framebuffer, attachment,
-		                                              All.FramebufferAttachmentObjectName,
-		                                              ref param);
+		        GL.GetFramebufferAttachmentParameter(FramebufferTarget.Framebuffer, attachment,
+		                                              FramebufferParameterName.FramebufferAttachmentObjectName,
+		                                              out param);
 				
 		        objName = param;
 		        GL.DeleteRenderbuffers(1, ref objName);
@@ -690,9 +704,9 @@ namespace iOSGLEssentials
 		    else if((int)All.Texture == param)
 		    {
 		        
-		        GL.GetFramebufferAttachmentParameter(All.Framebuffer, attachment,
-		                                              All.FramebufferAttachmentObjectName,
-		                                              ref param);
+		        GL.GetFramebufferAttachmentParameter(FramebufferTarget.Framebuffer, attachment,
+		                                              FramebufferParameterName.FramebufferAttachmentObjectName,
+		                                              out param);
 				
 		        objName = param;
 		        GL.DeleteTextures(1, ref objName);
@@ -707,7 +721,7 @@ namespace iOSGLEssentials
 				return;
 			}
 		    
-		    GL.BindFramebuffer(All.Framebuffer, fboName);
+		    GL.BindFramebuffer(FramebufferTarget.Framebuffer, fboName);
 			
 			
 		    int maxColorAttachments = 1;
@@ -718,13 +732,13 @@ namespace iOSGLEssentials
 		    for(colorAttachment = 0; colorAttachment < maxColorAttachments; colorAttachment++)
 		    {
 				// Delete the attachment
-				DeleteFBOAttachment((All)((int)All.ColorAttachment0 + colorAttachment));
+				DeleteFBOAttachment(FramebufferSlot.ColorAttachment0);
 			}
 			
 			// Delete any depth or stencil buffer attached
-		    DeleteFBOAttachment(All.DepthAttachment);
+		    DeleteFBOAttachment(FramebufferSlot.DepthAttachment);
 			
-		    DeleteFBOAttachment(All.StencilAttachment);
+		    DeleteFBOAttachment(FramebufferSlot.StencilAttachment);
 			
 		    GL.DeleteFramebuffers(1, ref fboName);
 		}
@@ -737,35 +751,35 @@ namespace iOSGLEssentials
 			
 			// Create a texture object to apply to model
 			GL.GenTextures(1, out colorTexture);
-			GL.BindTexture(All.Texture2D, colorTexture);
+			GL.BindTexture(TextureTarget.Texture2D, colorTexture);
 			
 			// Set up filter and wrap modes for this texture object
-			GL.TexParameter(All.Texture2D, All.TextureWrapS, (int)All.ClampToEdge);
-			GL.TexParameter(All.Texture2D, All.TextureWrapT, (int)All.ClampToEdge);
-			GL.TexParameter(All.Texture2D, All.TextureMagFilter, (int)All.Linear);
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)All.ClampToEdge);
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)All.ClampToEdge);
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)All.Linear);
 		
-			GL.TexParameter(All.Texture2D, All.TextureMinFilter, (int)All.Linear);
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Linear);
 			
 			// Allocate a texture image with which we can render to
 			// Pass NULL for the data parameter since we don't need to load image data.
 			//     We will be generating the image by rendering to this texture
 			byte[] dummy = null;
-			GL.TexImage2D<byte>(All.Texture2D, 0, (int)All.Rgba, width, height, 0,
-						 All.Rgba, All.UnsignedByte, dummy);
+			GL.TexImage2D<byte>(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, width, height, 0,
+						 PixelFormat.Rgba, PixelType.UnsignedByte, dummy);
 			
 			int depthRenderbuffer = 0;
 			GL.GenRenderbuffers(1, out depthRenderbuffer);
-			GL.BindRenderbuffer(All.Renderbuffer, depthRenderbuffer);
-			GL.RenderbufferStorage(All.Renderbuffer, All.DepthComponent16, width, height);
+			GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, depthRenderbuffer);
+			GL.RenderbufferStorage(RenderbufferTarget.Renderbuffer, RenderbufferInternalFormat.DepthComponent16, width, height);
 			
 			GL.GenFramebuffers(1, out fboName);
-			GL.BindFramebuffer(All.Framebuffer, fboName);	
-			GL.FramebufferTexture2D(All.Framebuffer, All.ColorAttachment0, All.Texture2D, colorTexture, 0);
-			GL.FramebufferRenderbuffer(All.Framebuffer, All.DepthAttachment, All.Renderbuffer, depthRenderbuffer);
+			GL.BindFramebuffer(FramebufferTarget.Framebuffer, fboName);	
+			GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferSlot.ColorAttachment0, TextureTarget.Texture2D, colorTexture, 0);
+			GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferSlot.DepthAttachment, RenderbufferTarget.Renderbuffer, depthRenderbuffer);
 			
-			if(GL.CheckFramebufferStatus(All.Framebuffer) != All.FramebufferComplete)
+			if(GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer) != FramebufferErrorCode.FramebufferComplete)
 			{
-				Console.WriteLine("failed to make complete framebuffer object %x", Enum.GetName (typeof(All), GL.CheckFramebufferStatus(All.Framebuffer)));
+				Console.WriteLine("failed to make complete framebuffer object %x", Enum.GetName (typeof(All), GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer)));
 				DestroyFBO(fboName);
 				return 0;
 			}
@@ -788,7 +802,7 @@ namespace iOSGLEssentials
 			// with the proper version preprocessor string prepended
 			float glLanguageVersion;
 			
-			glLanguageVersion = Convert.ToSingle(GL.GetString(All.ShadingLanguageVersion));
+			glLanguageVersion = Convert.ToSingle(GL.GetString( StringName.ShadingLanguageVersion));
 			
 			//  All.ShadingLanguageVersion returns the version standard version form
 			//  with decimals, but the GLSL version preprocessor directive simply
@@ -821,7 +835,7 @@ namespace iOSGLEssentials
 			sourceString = string.Format("#version {0}\n{1}", version, vertexSource.String);
 			
 			int vertexShader;
-			if(!CompileShader(out vertexShader, All.VertexShader, sourceString))
+			if(!CompileShader(out vertexShader, ShaderType.VertexShader, sourceString))
 			{
 				Console.WriteLine("Could not Compile Vertex Shader");
 				return 0;
@@ -836,7 +850,7 @@ namespace iOSGLEssentials
 			sourceString = string.Format("#version {0}\n{1}", version, fragmentSource.String);
 			
 			int fragShader;
-			if(!CompileShader(out fragShader, All.FragmentShader, sourceString))
+			if(!CompileShader(out fragShader, ShaderType.FragmentShader, sourceString))
 			{
 				Console.WriteLine("Could not Compile Fragment Shader");
 				return 0;
@@ -850,7 +864,7 @@ namespace iOSGLEssentials
 			//////////////////////
 			
 			GL.LinkProgram(prgName);
-			GL.GetProgram(prgName, All.InfoLogLength, ref logLength);
+			GL.GetProgram(prgName,  ProgramParameter.InfoLogLength, out logLength);
 			if(logLength > 0)
 			{
 				var log = new StringBuilder(logLength);
@@ -858,7 +872,7 @@ namespace iOSGLEssentials
 				Console.WriteLine("Program link log: " + log.ToString());
 			}
 			
-			GL.GetProgram(prgName, All.LinkStatus, ref status);
+			GL.GetProgram(prgName, ProgramParameter.LinkStatus, out status);
 			if(status == 0)
 			{
 				Console.WriteLine("Failed to link program");
@@ -866,7 +880,7 @@ namespace iOSGLEssentials
 			}
 			
 			GL.ValidateProgram(prgName);
-			GL.GetProgram(prgName, All.InfoLogLength, ref logLength);
+			GL.GetProgram(prgName, ProgramParameter.InfoLogLength, out logLength);
 			if(logLength > 0)
 			{
 				var log = new StringBuilder(logLength);
@@ -874,7 +888,7 @@ namespace iOSGLEssentials
 				Console.WriteLine("Program validate log: " + log.ToString());
 			}
 			
-			GL.GetProgram(prgName, All.ValidateStatus, ref status);
+			GL.GetProgram(prgName, ProgramParameter.ValidateStatus, out status);
 			if(status == 0)
 			{
 				Console.WriteLine("Failed to validate program");
@@ -898,7 +912,7 @@ namespace iOSGLEssentials
 			return prgName;
 		}
 		
-		bool CompileShader (out int shader, All type, string path)
+		bool CompileShader (out int shader, ShaderType type, string path)
 		{
 			string shaderProgram = System.IO.File.ReadAllText (path);
 			int len = shaderProgram.Length, status = 0;
@@ -906,7 +920,7 @@ namespace iOSGLEssentials
 
 			GL.ShaderSource (shader, 1, new string [] { shaderProgram }, ref len);
 			GL.CompileShader (shader);
-			GL.GetShader (shader, All.CompileStatus, ref status);
+			GL.GetShader (shader, ShaderParameter.CompileStatus, out status);
 			
 			if (status == 0) {
 				GL.DeleteShader (shader);
@@ -924,7 +938,7 @@ namespace iOSGLEssentials
 			int shaderCount = 0;
 			
 			// Get the number of attached shaders
-			GL.GetProgram(prgName, All.AttachedShaders, ref shaderCount);
+			GL.GetProgram(prgName, ProgramParameter.AttachedShaders, out shaderCount);
 			
 			var shaders = new int[shaderCount * sizeof(int)];
 			

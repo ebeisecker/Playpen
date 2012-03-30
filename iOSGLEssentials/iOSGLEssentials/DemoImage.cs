@@ -13,8 +13,8 @@ namespace iOSGLEssentials
 		
 		public int Width {get; set;}
 		public int Height {get; set;}
-		public All Format {get; set;}
-		public All Type {get; set;}
+		public PixelInternalFormat Format {get; set;}
+		public PixelType Type {get; set;}
 		
 		public int RowByteSize{get; set;}
 			
@@ -37,8 +37,8 @@ namespace iOSGLEssentials
 			image.Height = cgImage.Height;
 			image.RowByteSize = image.Width * 4;
 			image.Data = new byte[cgImage.Height * cgImage.Width];
-			image.Format = All.Rgba;
-			image.Type = All.UnsignedByte;
+			image.Format = PixelInternalFormat.Rgba;
+			image.Type = PixelType.UnsignedByte;
 			
 			using(var context = new CGBitmapContext(image.Data, image.Width, image.Height, 8, image.RowByteSize, cgImage.ColorSpace, CGImageAlphaInfo.NoneSkipLast))
 			{

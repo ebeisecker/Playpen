@@ -24,6 +24,7 @@
     <MtouchProfiling>true</MtouchProfiling>
     <MtouchLink>None</MtouchLink>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <MtouchI18n />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>none</DebugType>
@@ -48,6 +49,7 @@
     <MtouchDebug>true</MtouchDebug>
     <MtouchProfiling>true</MtouchProfiling>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <IpaPackageName />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>none</DebugType>
@@ -70,6 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
+    <None Include="GLData\demon.model" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -78,7 +81,6 @@
     <Compile Include="iOSGLEssentialsViewController.designer.cs">
       <DependentUpon>iOSGLEssentialsViewController.cs</DependentUpon>
     </Compile>
-    <Compile Include="EAGLEView.cs" />
     <Compile Include="ES2Renderer.cs" />
     <Compile Include="OpenGLRenderer.cs" />
     <Compile Include="DemoModel.cs" />
@@ -88,6 +90,7 @@
     <Compile Include="DemoImage.cs" />
     <Compile Include="DemoSource.cs" />
     <Compile Include="DataConverter.cs" />
+    <Compile Include="EAGLView.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="iOSGLEssentialsViewController.xib" />
@@ -95,12 +98,13 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Shaders\" />
-    <Folder Include="Resources\" />
+    <Folder Include="GLData\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Shaders\character.fsh" />
     <Content Include="Shaders\character.vsh" />
     <Content Include="Shaders\reflect.fsh" />
     <Content Include="Shaders\reflect.vsh" />
+    <Content Include="GLData\demon.png" />
   </ItemGroup>
 </Project>

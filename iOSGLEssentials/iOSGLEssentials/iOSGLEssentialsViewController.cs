@@ -7,11 +7,14 @@ using MonoTouch.UIKit;
 namespace iOSGLEssentials
 {
 	public partial class iOSGLEssentialsViewController : UIViewController
-	{
+	{	
+		EAGLView glView;
+		
 		public iOSGLEssentialsViewController () : base ("iOSGLEssentialsViewController", null)
 		{
+			
 		}
-		
+	
 		public override void DidReceiveMemoryWarning ()
 		{
 			// Releases the view if it doesn't have a superview.
@@ -22,9 +25,24 @@ namespace iOSGLEssentials
 		
 		public override void ViewDidLoad ()
 		{
+			Console.WriteLine("View Did Load");
 			base.ViewDidLoad ();
 			
 			// Perform any additional setup after loading the view, typically from a nib.
+			glView = new EAGLView(RectangleF.Empty);
+			glView.Initialize();
+			
+			previewView.AddSubview(glView);
+		}
+		
+		public override void ViewWillAppear (bool animated)
+		{
+			glView.StartAnimation();
+		}
+		
+		public override void ViewWillDisappear (bool animated)
+		{
+			glView.StopAnimation();
 		}
 		
 		public override void ViewDidUnload ()
