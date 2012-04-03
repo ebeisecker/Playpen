@@ -12,13 +12,13 @@ namespace iOSGLEssentials
 	partial class iOSGLEssentialsViewController
 	{
 		[Outlet]
-		MonoTouch.UIKit.UIView previewView { get; set; }
+		iOSGLEssentials.EAGLView glView { get; set; }
 		
 		void ReleaseDesignerOutlets ()
 		{
-			if (previewView != null) {
-				previewView.Dispose ();
-				previewView = null;
+			if (glView != null) {
+				glView.Dispose ();
+				glView = null;
 			}
 		}
 	}

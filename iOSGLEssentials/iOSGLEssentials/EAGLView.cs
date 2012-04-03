@@ -8,6 +8,7 @@ using System.Drawing;
 
 namespace iOSGLEssentials
 {
+	[Register("EAGLView")]
 	public class EAGLView : UIView
 	{
 		#region Members
@@ -57,10 +58,11 @@ namespace iOSGLEssentials
 			}
 		}
 		#endregion
-		[Export("initWithFrame:")]
-		public EAGLView (RectangleF frame)
-			:base(frame)
+		[Export("initWithCoder:")]
+		public EAGLView (NSCoder coder)
+			:base(coder)
 		{
+			Initialize();
 		}
 		
 		public void Initialize()

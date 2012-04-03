@@ -72,7 +72,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
-    <None Include="GLData\demon.model" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -85,12 +84,12 @@
     <Compile Include="OpenGLRenderer.cs" />
     <Compile Include="DemoModel.cs" />
     <Compile Include="MatrixUtil.cs" />
-    <Compile Include="VectorUtil.cs" />
     <Compile Include="GLUtil.cs" />
     <Compile Include="DemoImage.cs" />
     <Compile Include="DemoSource.cs" />
     <Compile Include="DataConverter.cs" />
     <Compile Include="EAGLView.cs" />
+    <Compile Include="VectorUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="iOSGLEssentialsViewController.xib" />
@@ -106,5 +105,6 @@
     <Content Include="Shaders\reflect.fsh" />
     <Content Include="Shaders\reflect.vsh" />
     <Content Include="GLData\demon.png" />
+    <Content Include="GLData\demon.model" />
   </ItemGroup>
 </Project>

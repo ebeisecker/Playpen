@@ -14,10 +14,10 @@ namespace iOSGLEssentials
 			[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 30)]
 			public string FileIdentifier;
 			
-			[FieldOffset(8)]
+			[FieldOffset(32)]
 			public uint MajorVersion;
 			
-			[FieldOffset(12)]
+			[FieldOffset(36)]
 			public uint MinorVersion;
 		}
 		
@@ -94,7 +94,7 @@ namespace iOSGLEssentials
 		{
 			if(string.IsNullOrEmpty(filePathName))
 			{
-				return null;
+				throw new ArgumentNullException("filePathName");
 			}
 			
 			var model = new DemoModel();
@@ -194,6 +194,7 @@ namespace iOSGLEssentials
 				model.PositionArraySize = attrib.ByteSize;
 				model.PositionType = (VertexAttribPointerType)Enum.ToObject(typeof(VertexAttribPointerType), attrib.DataType);
 				model.PositionSize = attrib.SizePerElement;
+				model.NumVertcies = attrib.NumElements;
 				model.Positions = new byte[model.PositionArraySize];
 				
 				model.Positions = binaryReader.ReadBytes(model.PositionArraySize);
@@ -212,6 +213,7 @@ namespace iOSGLEssentials
 				// Must have the same number of texcoords as positions
 				if(model.NumVertcies != attrib.NumElements)
 				{
+					Console.WriteLine("Must have the same number of texcoords as positions");
 					return null;
 				}
 				

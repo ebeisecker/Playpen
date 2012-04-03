@@ -7,9 +7,7 @@ using MonoTouch.UIKit;
 namespace iOSGLEssentials
 {
 	public partial class iOSGLEssentialsViewController : UIViewController
-	{	
-		EAGLView glView;
-		
+	{		
 		public iOSGLEssentialsViewController () : base ("iOSGLEssentialsViewController", null)
 		{
 			
@@ -29,10 +27,6 @@ namespace iOSGLEssentials
 			base.ViewDidLoad ();
 			
 			// Perform any additional setup after loading the view, typically from a nib.
-			glView = new EAGLView(RectangleF.Empty);
-			glView.Initialize();
-			
-			previewView.AddSubview(glView);
 		}
 		
 		public override void ViewWillAppear (bool animated)

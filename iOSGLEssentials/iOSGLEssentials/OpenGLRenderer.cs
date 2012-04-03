@@ -964,6 +964,7 @@ namespace iOSGLEssentials
 			while(error != ErrorCode.NoError)
 			{
 				Console.WriteLine("GLError " +  Enum.GetName(typeof(ErrorCode), error)); //GLUtil.GetGLErrorString(error));
+				error = GL.GetError();
 			}
 		}
 		#endregion
