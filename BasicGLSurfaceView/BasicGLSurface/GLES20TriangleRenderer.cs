@@ -85,6 +85,7 @@ namespace BasicGLSurface
 		
 		public void OnDrawFrame(IGL10 glUnused)
 		{
+			Log.Info(TAG, "OnDrawFrame");
 			// Ignore the passed-in GL10 interface, and use the GLES20
 			// class's static methods instead.
 			GLES20.GlClearColor(0.0f, 0.0f, 1.0f, 1.0f);
@@ -124,6 +125,7 @@ namespace BasicGLSurface
 		
 		public void OnSurfaceChanged(IGL10 glUnused, int width, int height)
 		{
+			Log.Info(TAG, "OnSurfaceChanged");
 			// Ignore the passed-in GL10 interface, and use the GLES20
 			// class's static methods instead.
 			GLES20.GlViewport(0, 0, width, height);
@@ -133,6 +135,7 @@ namespace BasicGLSurface
 		
 		public void OnSurfaceCreated(IGL10 glUnused, EGLConfig config)
 		{
+			Log.Info(TAG, "OnSurfaceCreated");
 			// Ignore the passed-in GL10 interface and use the GLES20
 			// class's static methods instead
 			m_Program = CreateProgram(m_VertexShader, m_FragmentShader);

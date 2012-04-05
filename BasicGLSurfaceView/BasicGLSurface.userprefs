@@ -1,17 +1,15 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="BasicGLSurfaceView/BasicGLSurfaceViewActivity.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="BasicGLSurface/BasicGLSurfaceActivity.cs">
     <Files>
-      <File FileName="BasicGLSurfaceView/BasicGLSurfaceViewActivity.cs" Line="18" Column="30" />
-      <File FileName="BasicGLSurfaceView/BasicGLSurfaceView.cs" Line="16" Column="8" />
-      <File FileName="BasicGLSurfaceView/GLES20TriangleRenderer.cs" Line="86" Column="15" />
-      <File FileName="BasicGLSurfaceView/Resources/values/Strings.xml" Line="6" Column="1" />
+      <File FileName="BasicGLSurface/Resources/values/Strings.xml" Line="4" Column="40" />
+      <File FileName="BasicGLSurface/Resources/Resource.designer.cs" Line="1" Column="1" />
+      <File FileName="BasicGLSurface/BasicGLSurfaceActivity.cs" Line="10" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
-        <State expanded="True" selected="True">
-          <Node name="BasicGLSurface" expanded="True">
-            <Node name="Properties" expanded="True" />
+        <State expanded="True">
+          <Node name="BasicGLSurface" expanded="True" selected="True">
             <Node name="Resources" expanded="True">
               <Node name="values" expanded="True" />
             </Node>
@@ -19,7 +17,7 @@
         </State>
       </Pad>
       <Pad Id="ClassPad">
-        <State expanded="True" selected="True" />
+        <State selected="True" />
       </Pad>
       <Pad Id="MonoDevelop.Debugger.WatchPad">
         <State>
@@ -39,4 +37,5 @@
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.ItemProperties.BasicGLSurface AndroidDeviceId-Debug="emulator-5554" />
 </Properties>

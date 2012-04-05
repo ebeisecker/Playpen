@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="BasicGLSurfaceView.BasicGLSurfaceView">
-	<uses-feature android:glEsVersion="0x002000" />	
-	<application android:label="BasicGLSurfaceView">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="BasicGLSurface.BasicGLSurface">
+	<uses-feature android:glEsVersion="0x002000" />
+	<application android:label="BasicGLSurface">
 	</application>
 	<uses-sdk android:targetSdkVersion="10" />
 </manifest>
