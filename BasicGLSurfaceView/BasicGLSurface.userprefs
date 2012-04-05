@@ -1,0 +1,42 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="BasicGLSurfaceView/BasicGLSurfaceViewActivity.cs">
+    <Files>
+      <File FileName="BasicGLSurfaceView/BasicGLSurfaceViewActivity.cs" Line="18" Column="30" />
+      <File FileName="BasicGLSurfaceView/BasicGLSurfaceView.cs" Line="16" Column="8" />
+      <File FileName="BasicGLSurfaceView/GLES20TriangleRenderer.cs" Line="86" Column="15" />
+      <File FileName="BasicGLSurfaceView/Resources/values/Strings.xml" Line="6" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True" selected="True">
+          <Node name="BasicGLSurface" expanded="True">
+            <Node name="Properties" expanded="True" />
+            <Node name="Resources" expanded="True">
+              <Node name="values" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="ClassPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State>
+          <Value>filter.Key</Value>
+          <Value>testRawData[i]</Value>
+          <Value>baseRawData[i]</Value>
+        </State>
+      </Pad>
+      <Pad Id="ConnectionManagerPad">
+        <State selected="True" />
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/Users/ebeisecker/Git/Playpen/BasicGLSurfaceView/BasicGLSurfaceView/GLES20TriangleRenderer.cs" line="89" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
