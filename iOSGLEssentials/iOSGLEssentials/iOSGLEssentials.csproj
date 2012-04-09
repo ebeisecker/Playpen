@@ -76,10 +76,6 @@
   <ItemGroup>
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
-    <Compile Include="iOSGLEssentialsViewController.cs" />
-    <Compile Include="iOSGLEssentialsViewController.designer.cs">
-      <DependentUpon>iOSGLEssentialsViewController.cs</DependentUpon>
-    </Compile>
     <Compile Include="ES2Renderer.cs" />
     <Compile Include="OpenGLRenderer.cs" />
     <Compile Include="DemoModel.cs" />
@@ -90,9 +86,6 @@
     <Compile Include="DataConverter.cs" />
     <Compile Include="EAGLView.cs" />
     <Compile Include="VectorUtil.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <InterfaceDefinition Include="iOSGLEssentialsViewController.xib" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

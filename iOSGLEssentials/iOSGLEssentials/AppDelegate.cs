@@ -15,7 +15,7 @@ namespace iOSGLEssentials
 	{
 		// class-level declarations
 		UIWindow window;
-		
+		EAGLView glView;
 		
 		//
 		// This method is invoked when the application has loaded and is ready to run. In this 
@@ -26,11 +26,14 @@ namespace iOSGLEssentials
 		//
 		public override bool FinishedLaunching (UIApplication app, NSDictionary options)
 		{
-			window = new UIWindow (UIScreen.MainScreen.Bounds)
-			{
-				RootViewController = new iOSGLEssentialsViewController()
-			};
+			window = new UIWindow (UIScreen.MainScreen.Bounds);
+			//{
+			//	RootViewController = new iOSGLEssentialsViewController()
+			//};
+			var frame = UIScreen.MainScreen.ApplicationFrame;
+			glView = new EAGLView(frame);
 			
+			window.AddSubview(glView);
 			window.MakeKeyAndVisible ();
 			
 			return true;
@@ -38,27 +41,27 @@ namespace iOSGLEssentials
 		
 		public override void OnResignActivation (UIApplication application)
 		{
-			//glView.StopAnimation();
+			glView.StopAnimation();
 		}
 		
 		public override void DidEnterBackground (UIApplication application)
 		{
-			//glView.StopAnimation();
+			glView.StopAnimation();
 		}
 		
 		public override void WillEnterForeground (UIApplication application)
 		{
-			//glView.StartAnimation();
+			glView.StartAnimation();
 		}
 		
 		public override void OnActivated (UIApplication application)
 		{
-			//glView.StartAnimation();
+			glView.StartAnimation();
 		}
 		
 		public override void WillTerminate (UIApplication application)
 		{
-			//glView.StopAnimation();
+			glView.StopAnimation();
 		}
 	}
 }

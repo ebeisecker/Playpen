@@ -19,6 +19,15 @@ namespace iOSGLEssentials
 		{
 		}
 		
+		/// <summary>
+		/// ICreate an ES 2.0 context
+		/// </summary>
+		/// <param name='context'>
+		/// Context.
+		/// </param>
+		/// <param name='drawable'>
+		/// Drawable.
+		/// </param>
 		public void InitWithContext (EAGLContext context, CAEAGLLayer drawable)
 		{
 			GL.GenFramebuffers(1, out m_defaultFBOName);
@@ -46,10 +55,10 @@ namespace iOSGLEssentials
 			GL.RenderbufferStorage(RenderbufferTarget.Renderbuffer, RenderbufferInternalFormat.DepthComponent16, backingWidth, backingHeight);
 			GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferSlot.DepthAttachment, RenderbufferTarget.Renderbuffer, m_depthRenderbuffer);
 			
-			if(GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer) != FramebufferErrorCode.FramebufferComplete)
+			var frameBufferError = GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
+			if(frameBufferError != FramebufferErrorCode.FramebufferComplete)
 			{
-				//Console.WriteLine(");
-				throw new ApplicationException("Failed to make complete framebuffer object: " + GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer));
+				throw new ApplicationException("Failed to make complete framebuffer object: " + frameBufferError);
 			}
 			
 			InitWithDefaultFBO(m_defaultFBOName);

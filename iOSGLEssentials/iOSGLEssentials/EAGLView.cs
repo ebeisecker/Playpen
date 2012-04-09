@@ -65,6 +65,12 @@ namespace iOSGLEssentials
 			Initialize();
 		}
 		
+		public EAGLView(RectangleF frame)
+			: base(frame)
+		{
+			Initialize();
+		}
+		
 		public void Initialize()
 		{ 
 			CAEAGLLayer eaglLayer = (CAEAGLLayer)Layer;

@@ -122,6 +122,10 @@ namespace iOSGLEssentials
 					return null;
 				}
 				
+				//
+				// Read in the Model Elements Data
+				//
+				
 				// Get the size of the ModelTOC
 				size = Marshal.SizeOf(typeof(ModelTOC));
 				Array.Resize<byte>(ref buffer, size);
@@ -184,6 +188,10 @@ namespace iOSGLEssentials
 					model.Elements = binaryReader.ReadBytes(model.ElementArraySize);
 				//}
 				
+				//
+				// Read the models Position Data
+				//
+				
 				binaryReader.BaseStream.Seek (modelTOC.BytePositionOffset, SeekOrigin.Begin);
 				
 				// Convert file bytes to Struct
@@ -199,10 +207,14 @@ namespace iOSGLEssentials
 				
 				model.Positions = binaryReader.ReadBytes(model.PositionArraySize);
 				
+				//
+				// Read the models Texture Data
+				// 
+				
 				fileStream.Seek(modelTOC.ByteTexcoordOffset, SeekOrigin.Begin);
 				
 				// Convert file bytes to Struct
-				Array.Resize<byte>(ref buffer, modelTOC.AttribHeaderSize);
+				// Array.Resize<byte>(ref buffer, modelTOC.AttribHeaderSize);
 				buffer = binaryReader.ReadBytes(modelTOC.AttribHeaderSize);
 				attrib = ToStruct<ModelAttrib>(buffer);
 				
@@ -219,8 +231,18 @@ namespace iOSGLEssentials
 				
 				model.TexCoords = new byte[model.TexCoordArraySize];
 				
+				//
+				// Read the models Normals Data
+				//
 				fileStream.Seek(modelTOC.ByteNormalOffset, SeekOrigin.Begin);
 				
+				// Convert file bytes to Struct
+				buffer = binaryReader.ReadBytes(modelTOC.AttribHeaderSize);
+				attrib = ToStruct<ModelAttrib>(buffer);
+				
+				model.NormalArraySize = attrib.ByteSize;
+				model.NormalType = (VertexAttribPointerType)Enum.ToObject(typeof(VertexAttribPointerType), attrib.DataType);
+				model.NormalSize = attrib.SizePerElement;
 				model.Normals = binaryReader.ReadBytes(model.NormalArraySize);
 				
 				return model;
@@ -263,31 +285,31 @@ namespace iOSGLEssentials
 			
 			model.PositionType = VertexAttribPointerType.Float;
 			model.PositionSize = 3;
-			model.PositionArraySize = posArray.Length;
+			model.PositionArraySize = posArray.Length * 4;
 			model.Positions = new byte[model.PositionArraySize];
-			Array.Copy(posArray, model.Positions, model.PositionArraySize);
+			Buffer.BlockCopy(posArray, 0, model.Positions, 0, model.PositionArraySize);
 			
 			model.TexCoordType = VertexAttribPointerType.Float;
 			model.TexCoordsSize = 2;
-			model.TexCoordArraySize = texcoordArray.Length;
+			model.TexCoordArraySize = texcoordArray.Length * 4;
 			model.TexCoords = new byte[model.PositionArraySize];
-			Array.Copy(texcoordArray, model.TexCoords, model.TexCoordArraySize);
+			Buffer.BlockCopy(texcoordArray, 0, model.TexCoords, 0, model.TexCoordArraySize);
 			
 			model.NormalType = VertexAttribPointerType.Float;
 			model.NormalSize = 3;
-			model.NormalArraySize = normalArray.Length;
+			model.NormalArraySize = normalArray.Length * 4;
 			model.Normals = new byte[model.NormalArraySize];
-			Array.Copy(normalArray, model.Normals, model.NormalArraySize);
+			Buffer.BlockCopy(normalArray, 0, model.Normals, 0, model.NormalArraySize);
 			
-			model.ElementArraySize = elementArray.Length;
+			model.ElementArraySize = elementArray.Length * 2;
 			model.Elements = new byte[model.ElementArraySize];
-			Array.Copy(elementArray, model.Elements, model.ElementArraySize);
+			Buffer.BlockCopy(elementArray, 0, model.Elements, 0, model.ElementArraySize);
 			
 			model.PrimType = All.Triangles;
 			
 			model.NumElements = elementArray.Length;
 			model.ElementType = DrawElementsType.UnsignedShort;
-			model.NumVertcies = model.PositionArraySize / model.PositionSize;
+			model.NumVertcies = model.PositionArraySize / (model.PositionSize * 4);
 			
 			return model;
 		}

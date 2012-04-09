@@ -299,10 +299,12 @@ namespace iOSGLEssentials
 			// Draw our object
 			if(m_useVBOs)
 			{
-				GL.DrawElements(BeginMode.Triangles, m_characterNumElements, m_characterElementType, new int[0]);
+				//GL.DrawElements(BeginMode.Triangles, m_characterNumElements, m_characterElementType, IntPtr.Zero);
+				GL.DrawElements(All.Triangles, m_characterNumElements, (All)m_characterElementType, IntPtr.Zero);
 			}
 			else{
-				GL.DrawElements(BeginMode.Triangles, m_characterNumElements, m_characterElementType, m_characterModel.Elements);
+				//GL.DrawElements(BeginMode.Triangles, m_characterNumElements, m_characterElementType, m_characterModel.Elements);
+				GL.DrawElements(All.Triangles, m_characterNumElements, (All)m_characterElementType, m_characterModel.Elements);
 			}
 			
 			// Bind our default FBO to render to the screen
@@ -346,10 +348,12 @@ namespace iOSGLEssentials
 			// Draw our object
 			if(m_useVBOs)
 			{
-				GL.DrawElements(BeginMode.Triangles, m_characterNumElements, m_characterElementType, new int[0]);
+				//GL.DrawElements(BeginMode.Triangles, m_characterNumElements, m_characterElementType, IntPtr.Zero);
+				GL.DrawElements(All.Triangles, m_characterNumElements, (All)m_characterElementType, IntPtr.Zero);
 			}
 			else{
-				GL.DrawElements(BeginMode.Triangles, m_characterNumElements, m_characterElementType, m_characterModel.Elements);
+				//GL.DrawElements(BeginMode.Triangles, m_characterNumElements, m_characterElementType, m_characterModel.Elements);
+				GL.DrawElements(All.Triangles, m_characterNumElements, (All)m_characterElementType, m_characterModel.Elements);
 			}
 			
 #if RENDER_REFLECTION
@@ -401,10 +405,12 @@ namespace iOSGLEssentials
 			// Draw our reflection plane
 			if(m_useVBOs)
 			{
-				GL.DrawElements(BeginMode.Triangles, m_quadNumElements, m_quadElementType, new int[0]);
+				//GL.DrawElements(BeginMode.Triangles, m_quadNumElements, m_quadElementType, IntPtr.Zero);
+				GL.DrawElements(All.Triangles,  m_quadNumElements, (All)m_quadElementType, IntPtr.Zero);
 			}
 			else{
-				GL.DrawElements(BeginMode.Triangles, m_quadNumElements, m_quadElementType, m_quadModel.Elements);
+				//GL.DrawElements(BeginMode.Triangles, m_quadNumElements, m_quadElementType, m_quadModel.Elements);
+				GL.DrawElements(All.Triangles,  m_quadNumElements, (All)m_quadElementType, m_quadModel.Elements);
 			}
 #endif // RENDER_REFLECTION
 			
@@ -802,7 +808,8 @@ namespace iOSGLEssentials
 			// with the proper version preprocessor string prepended
 			float glLanguageVersion;
 			
-			glLanguageVersion = Convert.ToSingle(GL.GetString( StringName.ShadingLanguageVersion));
+			var glVerString = GL.GetString( StringName.ShadingLanguageVersion);
+			glLanguageVersion = Convert.ToSingle(glVerString.Replace("OpenGL ES GLSL ES", string.Empty));
 			
 			//  All.ShadingLanguageVersion returns the version standard version form
 			//  with decimals, but the GLSL version preprocessor directive simply
@@ -832,6 +839,8 @@ namespace iOSGLEssentials
 			// Specify and compile VertexShader //
 			//////////////////////////////////////
 			
+			// Prepend our vertex shader source string with the supported GLSL version so
+			// the shader will work on ES, Legacy, and OpenGL 3.2 Core Profile contexts
 			sourceString = string.Format("#version {0}\n{1}", version, vertexSource.String);
 			
 			int vertexShader;
@@ -912,13 +921,12 @@ namespace iOSGLEssentials
 			return prgName;
 		}
 		
-		bool CompileShader (out int shader, ShaderType type, string path)
+		bool CompileShader (out int shader, ShaderType type, string shaderSource)
 		{
-			string shaderProgram = System.IO.File.ReadAllText (path);
-			int len = shaderProgram.Length, status = 0;
+			int len = shaderSource.Length, status = 0;
 			shader = GL.CreateShader (type);
 
-			GL.ShaderSource (shader, 1, new string [] { shaderProgram }, ref len);
+			GL.ShaderSource (shader, 1, new string [] { shaderSource }, ref len);
 			GL.CompileShader (shader);
 			GL.GetShader (shader, ShaderParameter.CompileStatus, out status);
 			

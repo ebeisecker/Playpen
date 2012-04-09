@@ -1,25 +1,26 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhoneSimulator" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="iOSGLEssentials/DemoImage.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="iOSGLEssentials/OpenGLRenderer.cs">
     <Files>
-      <File FileName="iOSGLEssentials/AppDelegate.cs" Line="31" Column="46" />
-      <File FileName="iOSGLEssentials/ES2Renderer.cs" Line="16" Column="12" />
-      <File FileName="iOSGLEssentials/OpenGLRenderer.cs" Line="675" Column="28" />
+      <File FileName="iOSGLEssentials/AppDelegate.cs" Line="29" Column="55" />
+      <File FileName="iOSGLEssentials/ES2Renderer.cs" Line="61" Column="1" />
+      <File FileName="iOSGLEssentials/OpenGLRenderer.cs" Line="292" Column="34" />
       <File FileName="iOSGLEssentials/Info.plist" />
-      <File FileName="iOSGLEssentials/Main.cs" Line="17" Column="1" />
+      <File FileName="iOSGLEssentials/Main.cs" Line="19" Column="3" />
       <File FileName="iOSGLEssentials/iOSGLEssentialsViewController.cs" Line="29" Column="81" />
       <File FileName="iOSGLEssentials/DemoSource.cs" Line="1" Column="1" />
-      <File FileName="iOSGLEssentials/DemoModel.cs" Line="6" Column="17" />
-      <File FileName="iOSGLEssentials/DemoImage.cs" Line="55" Column="73" />
+      <File FileName="iOSGLEssentials/DemoModel.cs" Line="218" Column="36" />
+      <File FileName="iOSGLEssentials/DemoImage.cs" Line="23" Column="4" />
+      <File FileName="iOSGLEssentials/EAGLView.cs" Line="68" Column="29" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="iOSGLEssentials" expanded="True">
+            <Node name="References" expanded="True" />
             <Node name="GLData" expanded="True" />
             <Node name="Shaders" expanded="True" />
-            <Node name="DemoImage.cs" selected="True" />
-            <Node name="iOSGLEssentialsViewController.cs" expanded="True" />
+            <Node name="OpenGLRenderer.cs" selected="True" />
           </Node>
         </State>
       </Pad>
@@ -38,10 +39,7 @@
     </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Breakpoint file="/Users/ebeisecker/Git/Playpen/iOSGLEssentials/iOSGLEssentials/AppDelegate.cs" line="33" />
-      <Breakpoint file="/Users/ebeisecker/Git/Playpen/iOSGLEssentials/iOSGLEssentials/DemoModel.cs" line="216" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>
