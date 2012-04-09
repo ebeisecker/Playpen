@@ -1,5 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="hello">Hello World, Click Me!</string>
 	<string name="app_name">RedLaserDemo</string>
+	<string name="scan39Barcodes">Scan 39 Barcodes</string>
+	<string name="scan128Barcodes">Scan 128 Barcodes</string>
+	<string name="scanQRBarcodes">Scan QR Barcodes</string>
+	<string name="scanUPCBarcodes">Scan UPC Barcodes</string>
+	<string name="scanEAN8Barcodes">Scan EAN Barcodes</string>
+	<string name="barcodeTypes">Barcode Types</string>
+	<string name="scan">Scan</string>
 </resources>

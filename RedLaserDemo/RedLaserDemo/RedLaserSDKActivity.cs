@@ -6,14 +6,14 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
-using Com.Ebay.Redlasersdk.Scanner;
 using Android.Util;
 using Com.Ebay.Redlasersdk;
+using Com.Ebay.Redlasersdk.Scanner;
 
 namespace RedLaserDemo
 {
-	[Activity (Label = "RedLaserSDKActivity", MainLauncher = true)]
-	public class RedLaserSDKActivity : BarcodeScanActivity
+	[Activity (Label = "RedLaserSDKActivity")]
+	public class RedLaserSDKActivity : Com.Ebay.Redlasersdk.Scanner.BarcodeScanActivity
 	{
 		const string TAG = "RedLaserSDK";
 		
@@ -47,9 +47,9 @@ namespace RedLaserDemo
 			settings.AlignBarcode = "Align barcode inside box";
 			settings.HoldStill = "Hold still for scan";
 			
-			base.OnCreate (bundle);
+			base.OnCreate (bundle, settings);
 			
-			var extras = Intent.Extras;
+			var extras = Intent.Extras.GetBundle("ScanBundle");
 			
 			Hints.Upce = extras.GetBoolean(DO_UPCE);
 			Hints.Ean8 = extras.GetBoolean(DO_EAN8);
@@ -63,9 +63,14 @@ namespace RedLaserDemo
 			Hints.RSS14 = extras.GetBoolean(DO_RSS14);
 			Hints.Sticky = extras.GetBoolean(DO_STICKY);
 			
-			SetButtons("Button", "Button 2", "Button 3");
+			//SetButtons("Button", "Button 2", "Button 3");
 			
 			Window.SetFlags(WindowManagerFlags.Fullscreen, WindowManagerFlags.Fullscreen);
+		}
+		
+		protected override void OnResume ()
+		{
+			base.OnResume ();
 		}
 		
 		protected override sealed void OnButton1Click()
@@ -78,12 +83,12 @@ namespace RedLaserDemo
 			//throw new NotImplementedException ();
 		}
 		
-		protected override void OnButton3Click ()
+		protected override sealed void OnButton3Click ()
 		{
 			//throw new NotImplementedException ();
 		}
 		
-		protected override void OnBarcodeScanned (BarcodeResult barcode)
+		protected void OnBarcodeScanned (BarcodeResult barcode)
 		{
 			ReturnResult(barcode);
 		}

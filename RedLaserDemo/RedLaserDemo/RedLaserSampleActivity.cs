@@ -11,9 +11,12 @@ using Android.Views;
 using Android.Widget;
 using Android.Util;
 
+//[assembly:UsesLibrary("com.ebay.redlasersdk")]
+using Com.Ebay.Redlasersdk.Scanner;
+                      
 namespace RedLaserDemo
-{
-	[Activity (Label = "RedLaserSampleActivity")]			
+{	
+	[Activity (Name="monodroid.samples.redlasersample", Label = "RedLaserSampleActivity", MainLauncher = true)]			
 	public class RedLaserSampleActivity : Activity
 	{
 		const string TAG = "RedLaserSampleActivity";
@@ -37,15 +40,17 @@ namespace RedLaserDemo
 			base.OnCreate (bundle);
 			Title = "RedLaser SDK Demo";
 			
-			SetContentView(2130903040);
+			SetContentView(Resource.Layout.Main);
 			
-			var btnScan = (ToggleButton)FindViewById(2131165192); // btnScan
+			this.udid = RedLaserSettings.GetDeviceID(ContentResolver);
+			
+			var btnScan = (Button)FindViewById(Resource.Id.btnScan); // btnScan
 			btnScan.Click += (sender, e) => this.LaunchScanner();
 			
-			var udidView = (TextView)FindViewById(2131165191); // udidString
+			var udidView = (TextView)FindViewById(Resource.Id.udidString); // udidString
 			udidView.SetText("UDID: " + this.udid, TextView.BufferType.Normal);
 			
-			var toggleUPC = (ToggleButton)FindViewById(2131165185); // toggleUPC
+			var toggleUPC = (ToggleButton)FindViewById(Resource.Id.toggleUPC); // toggleUPC
 			toggleUPC.Checked = this.doUpce;
 			toggleUPC.Click += (sender, e) => 
 			{
@@ -59,7 +64,7 @@ namespace RedLaserDemo
 				}
 			};
 			
-			var toggleEAN = (ToggleButton)FindViewById(2131165186); // Toggle EAN
+			var toggleEAN = (ToggleButton)FindViewById(Resource.Id.toggleEAN); // Toggle EAN
 			toggleEAN.Checked = doEan8;
 			toggleEAN.Click += (sender, e) => 
 			{
@@ -75,7 +80,7 @@ namespace RedLaserDemo
 				}
 			};
 			
-			var toggleQR = (ToggleButton)FindViewById(2131165187); // Toggle QR
+			var toggleQR = (ToggleButton)FindViewById(Resource.Id.toggleQR); // Toggle QR
 			toggleQR.Checked = doQRCode;
 			toggleQR.Click += (sender, e) => 
 			{
@@ -89,7 +94,7 @@ namespace RedLaserDemo
 				}
 			};
 			
-			var toggle128 = (ToggleButton)FindViewById(2131165188); // toggle128
+			var toggle128 = (ToggleButton)FindViewById(Resource.Id.toggle128); // toggle128
 			toggle128.Checked = doCode128;
 			toggle128.Click += (sender, e) => 
 			{
@@ -103,7 +108,7 @@ namespace RedLaserDemo
 				}
 			};
 			
-			var toggle39 = (ToggleButton)FindViewById(2131165189); // toggle39
+			var toggle39 = (ToggleButton)FindViewById(Resource.Id.toggle39); // toggle39
 			toggle39.Checked = doCode39;
 			toggle39.Click += (sender, e) => 
 			{
@@ -122,10 +127,10 @@ namespace RedLaserDemo
 		{
 			base.OnResume ();
 			
-			var toggleUPC = (ToggleButton)FindViewById(2131165185); // toggleUPC
+			var toggleUPC = (ToggleButton)FindViewById(Resource.Id.toggleUPC); // toggleUPC
 			toggleUPC.Checked = doUpce;
 			
-			var toggleEAN = (ToggleButton)FindViewById(2131165186); // Toggle EAN
+			var toggleEAN = (ToggleButton)FindViewById(Resource.Id.toggleEAN); // Toggle EAN
 			toggleEAN.Checked = doEan8;
 			
 			var toggleQR = (ToggleButton)FindViewById(2131165187); // Toggle QR
@@ -154,7 +159,7 @@ namespace RedLaserDemo
 		{
 		    base.OnCreateOptionsMenu (menu);
 			var inflater = MenuInflater; 
-			inflater.Inflate(2131099648, menu); // main
+			inflater.Inflate(Resource.Menu.main, menu); // main
 			return true;
 		}
 		
@@ -162,7 +167,7 @@ namespace RedLaserDemo
 		{
 			switch(item.ItemId)
 			{
-			case 2131165195: // scan
+			case Resource.Id.scan: // scan
 				LaunchScanner();
 				return true;
 			}
@@ -176,7 +181,7 @@ namespace RedLaserDemo
 			{
 				var bundle = BuildBundle();
 				var scanIntent = new Intent(this, typeof(RedLaserSDKActivity));
-				scanIntent.PutExtra("Scans", bundle);
+				scanIntent.PutExtra("ScanBundle", bundle);
 				StartActivityForResult(scanIntent, 1);
 			}
 			catch(Exception e)
