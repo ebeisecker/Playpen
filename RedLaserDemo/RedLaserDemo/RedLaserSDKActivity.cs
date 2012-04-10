@@ -31,12 +31,12 @@ namespace RedLaserDemo
 		
 		protected override int BeepResource
 		{
-			get { return R.Raw.Beep; }
+			get { return Resource.Raw.beep; }
 		}
 		
 		protected override int LogoResource
 		{
-			get { return R.Drawable.OverlayLogo; }
+			get { return Resource.Drawable.overlay_logo; }
 		} 
 		
 		protected override void OnCreate (Bundle bundle)

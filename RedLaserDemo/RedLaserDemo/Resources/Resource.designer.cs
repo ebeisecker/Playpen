@@ -27,10 +27,19 @@ namespace RedLaserDemo
 		{
 			
 			// aapt resource value: 0x7f020000
-			public const int Icon = 2130837504;
+			public const int bolt = 2130837504;
 			
 			// aapt resource value: 0x7f020001
-			public const int overlay_logo = 2130837505;
+			public const int bottom_button_bar_gradient = 2130837505;
+			
+			// aapt resource value: 0x7f020002
+			public const int gray_bolt = 2130837506;
+			
+			// aapt resource value: 0x7f020003
+			public const int icon = 2130837507;
+			
+			// aapt resource value: 0x7f020004
+			public const int overlay_logo = 2130837508;
 			
 			private Drawable()
 			{
@@ -40,35 +49,41 @@ namespace RedLaserDemo
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f070007
-			public const int btnScan = 2131165191;
-			
-			// aapt resource value: 0x7f070009
-			public const int scan = 2131165193;
+			// aapt resource value: 0x7f070008
+			public const int btn_scan = 2131165192;
 			
 			// aapt resource value: 0x7f070000
-			public const int scanOptionsLayout = 2131165184;
-			
-			// aapt resource value: 0x7f070001
-			public const int textView1 = 2131165185;
-			
-			// aapt resource value: 0x7f070005
-			public const int toggle128 = 2131165189;
+			public const int code_types = 2131165184;
 			
 			// aapt resource value: 0x7f070006
-			public const int toggle39 = 2131165190;
+			public const int empty_view = 2131165190;
+			
+			// aapt resource value: 0x7f07000b
+			public const int scan = 2131165195;
+			
+			// aapt resource value: 0x7f070004
+			public const int toggle128 = 2131165188;
+			
+			// aapt resource value: 0x7f070005
+			public const int toggle39 = 2131165189;
 			
 			// aapt resource value: 0x7f070002
 			public const int toggleEAN = 2131165186;
 			
-			// aapt resource value: 0x7f070004
-			public const int toggleQR = 2131165188;
-			
 			// aapt resource value: 0x7f070003
-			public const int toggleUPC = 2131165187;
+			public const int toggleQR = 2131165187;
 			
-			// aapt resource value: 0x7f070008
-			public const int udidString = 2131165192;
+			// aapt resource value: 0x7f070001
+			public const int toggleUPC = 2131165185;
+			
+			// aapt resource value: 0x7f070007
+			public const int udid_string = 2131165191;
+			
+			// aapt resource value: 0x7f070009
+			public const int video = 2131165193;
+			
+			// aapt resource value: 0x7f07000a
+			public const int videoview_loading_text = 2131165194;
 			
 			private Id()
 			{
@@ -80,6 +95,9 @@ namespace RedLaserDemo
 			
 			// aapt resource value: 0x7f030000
 			public const int Main = 2130903040;
+			
+			// aapt resource value: 0x7f030001
+			public const int video_view = 2130903041;
 			
 			private Layout()
 			{
@@ -114,29 +132,17 @@ namespace RedLaserDemo
 			// aapt resource value: 0x7f050001
 			public const int app_name = 2131034113;
 			
-			// aapt resource value: 0x7f050007
-			public const int barcodeTypes = 2131034119;
+			// aapt resource value: 0x7f050003
+			public const int code_types = 2131034115;
+			
+			// aapt resource value: 0x7f050002
+			public const int empty_history = 2131034114;
 			
 			// aapt resource value: 0x7f050000
 			public const int hello = 2131034112;
 			
-			// aapt resource value: 0x7f050008
-			public const int scan = 2131034120;
-			
-			// aapt resource value: 0x7f050003
-			public const int scan128Barcodes = 2131034115;
-			
-			// aapt resource value: 0x7f050002
-			public const int scan39Barcodes = 2131034114;
-			
-			// aapt resource value: 0x7f050006
-			public const int scanEAN8Barcodes = 2131034118;
-			
 			// aapt resource value: 0x7f050004
-			public const int scanQRBarcodes = 2131034116;
-			
-			// aapt resource value: 0x7f050005
-			public const int scanUPCBarcodes = 2131034117;
+			public const int scan = 2131034116;
 			
 			private String()
 			{

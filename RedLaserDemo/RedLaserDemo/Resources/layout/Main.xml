@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/code_types"
+    android:layout_width="fill_parent"
+    android:layout_height="22dip"
+    android:text="@string/code_types"
+    android:background="@android:color/background_dark"
+    android:textColor="@android:color/primary_text_dark"
+    android:gravity="center"
+    android:textStyle="bold"
+    />
+     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="48dip"
+    android:background="@android:color/background_dark"
+    android:textColor="@android:color/primary_text_dark"
+    android:gravity="center"
+    >
+     <ToggleButton android:id="@+id/toggleUPC"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textOn="UPC"
+        android:textOff="UPC"/>
+     <ToggleButton android:id="@+id/toggleEAN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textOn="EAN"
+        android:textOff="EAN"/>
+     <ToggleButton android:id="@+id/toggleQR"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textOn="QR"
+        android:textOff="QR"/>
+     <ToggleButton android:id="@+id/toggle128"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textOn="128"
+        android:textOff="128"/>
+     <ToggleButton android:id="@+id/toggle39"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textOn="39"
+        android:textOff="39"/>
+</LinearLayout>
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/empty_view"
+    android:layout_width="fill_parent"
+    android:layout_height="150dip"
+    android:text="@string/empty_history"
+    android:background="@android:color/background_dark"
+    android:textColor="@android:color/primary_text_dark"
+    android:gravity="center"
+    android:textStyle="bold"
+    />
+   
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/udid_string"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_weight="1"
+    android:text=""
+    android:background="@android:color/background_dark"
+    android:textColor="@android:color/primary_text_dark"
+    android:gravity="center"
+    android:textStyle="bold"
+    />
+<LinearLayout android:orientation="horizontal"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:paddingTop="5dip"
+    	android:gravity="center"
+    	android:background="@drawable/bottom_button_bar_gradient">
+    <Button android:id="@+id/btn_scan"
+    	android:layout_height="wrap_content"
+    	android:layout_width="wrap_content"
+    	android:drawableLeft="@drawable/bolt"
+    	android:text="Scan " />
+</LinearLayout>
+</LinearLayout>

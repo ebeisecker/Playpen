@@ -44,10 +44,10 @@ namespace RedLaserDemo
 			
 			this.udid = RedLaserSettings.GetDeviceID(ContentResolver);
 			
-			var btnScan = (Button)FindViewById(Resource.Id.btnScan); // btnScan
+			var btnScan = (Button)FindViewById(Resource.Id.btn_scan); // btnScan
 			btnScan.Click += (sender, e) => this.LaunchScanner();
 			
-			var udidView = (TextView)FindViewById(Resource.Id.udidString); // udidString
+			var udidView = (TextView)FindViewById(Resource.Id.udid_string); // udidString
 			udidView.SetText("UDID: " + this.udid, TextView.BufferType.Normal);
 			
 			var toggleUPC = (ToggleButton)FindViewById(Resource.Id.toggleUPC); // toggleUPC

@@ -52,8 +52,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RedLaserSDKActivity.cs" />
     <Compile Include="RedLaserSampleActivity.cs" />
-    <Compile Include="BarcodeScanActivity.cs" />
-    <Compile Include="BarcodeScanLayout.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -61,19 +59,41 @@
     <None Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\layout\Main.axml" />
     <AndroidResource Include="Resources\values\Strings.xml" />
-    <AndroidResource Include="Resources\drawable\Icon.png" />
-    <AndroidResource Include="Resources\raw\beep.wav" />
-    <AndroidResource Include="Resources\drawable\overlay_logo.png" />
     <AndroidResource Include="Resources\menu\main.xml" />
+    <AndroidResource Include="Resources\drawable-hdpi\bolt.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\gray_bolt.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\icon.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\overlay_logo.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\icon.png" />
+    <AndroidResource Include="Resources\drawable-ldpi\overlay_logo.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\bolt.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\gray_bolt.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\icon.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\overlay_logo.png" />
+    <AndroidResource Include="Resources\layout\Main.xml" />
+    <AndroidResource Include="Resources\layout\video_view.xml" />
+    <AndroidResource Include="Resources\raw\beep.ogg" />
+    <AndroidResource Include="Resources\drawable\bottom_button_bar_gradient.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Resources\raw\" />
     <Folder Include="Resources\menu\" />
+    <Folder Include="Resources\drawable-hdpi\" />
+    <Folder Include="Resources\drawable-ldpi\" />
+    <Folder Include="Resources\drawable-mdpi\" />
+    <Folder Include="Resources\layout\" />
+    <Folder Include="Resources\drawable\" />
+    <Folder Include="libs\" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidJavaLibrary Include="redlasersdk.jar" />
+    <AndroidAsset Include="Assets\RedLaser_License.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidJavaLibrary Include="libs\redlasersdk.jar" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidNativeLibrary Include="libs\armeabi\libredlaser.so" />
   </ItemGroup>
 </Project>
