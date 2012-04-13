@@ -21,7 +21,7 @@ namespace BasicGLSurface
 		{
 			Log.Info(TAG, "OnCreate");
 			base.OnCreate (bundle);
-			
+		
 			m_View = new BasicGLSurfaceView(Application);
 			Log.Info(TAG, "Created BasicGLSurfaceView");
 			

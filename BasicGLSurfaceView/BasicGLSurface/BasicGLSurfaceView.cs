@@ -27,7 +27,7 @@ namespace BasicGLSurface
 			var render = new GLES20TriangleRenderer(context); 
 			Log.Info(TAG, "Created GLES20TriangleRender");
 			
-			SetRenderer(render);
+			SetRenderer(render);		
 			Log.Info(TAG, "SetRenderer");
 		}
 	}
