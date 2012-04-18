@@ -299,12 +299,12 @@ namespace iOSGLEssentials
 			// Draw our object
 			if(m_useVBOs)
 			{
-				//GL.DrawElements(BeginMode.Triangles, m_characterNumElements, m_characterElementType, IntPtr.Zero);
-				GL.DrawElements(All.Triangles, m_characterNumElements, (All)m_characterElementType, IntPtr.Zero);
+				GL.DrawElements(BeginMode.Triangles, m_characterNumElements, m_characterElementType, IntPtr.Zero);
+				//GL.DrawElements(All.Triangles, m_characterNumElements, (All)m_characterElementType, IntPtr.Zero);
 			}
 			else{
-				//GL.DrawElements(BeginMode.Triangles, m_characterNumElements, m_characterElementType, m_characterModel.Elements);
-				GL.DrawElements(All.Triangles, m_characterNumElements, (All)m_characterElementType, m_characterModel.Elements);
+				GL.DrawElements(BeginMode.Triangles, m_characterNumElements, m_characterElementType, m_characterModel.Elements);
+				//GL.DrawElements(All.Triangles, m_characterNumElements, (All)m_characterElementType, m_characterModel.Elements);
 			}
 			
 			// Bind our default FBO to render to the screen
@@ -348,12 +348,12 @@ namespace iOSGLEssentials
 			// Draw our object
 			if(m_useVBOs)
 			{
-				//GL.DrawElements(BeginMode.Triangles, m_characterNumElements, m_characterElementType, IntPtr.Zero);
-				GL.DrawElements(All.Triangles, m_characterNumElements, (All)m_characterElementType, IntPtr.Zero);
+				GL.DrawElements(BeginMode.Triangles, m_characterNumElements, m_characterElementType, IntPtr.Zero);
+				//GL.DrawElements(All.Triangles, m_characterNumElements, (All)m_characterElementType, IntPtr.Zero);
 			}
 			else{
-				//GL.DrawElements(BeginMode.Triangles, m_characterNumElements, m_characterElementType, m_characterModel.Elements);
-				GL.DrawElements(All.Triangles, m_characterNumElements, (All)m_characterElementType, m_characterModel.Elements);
+				GL.DrawElements(BeginMode.Triangles, m_characterNumElements, m_characterElementType, m_characterModel.Elements);
+				//GL.DrawElements(All.Triangles, m_characterNumElements, (All)m_characterElementType, m_characterModel.Elements);
 			}
 			
 #if RENDER_REFLECTION
@@ -405,12 +405,12 @@ namespace iOSGLEssentials
 			// Draw our reflection plane
 			if(m_useVBOs)
 			{
-				//GL.DrawElements(BeginMode.Triangles, m_quadNumElements, m_quadElementType, IntPtr.Zero);
-				GL.DrawElements(All.Triangles,  m_quadNumElements, (All)m_quadElementType, IntPtr.Zero);
+				GL.DrawElements(BeginMode.Triangles, m_quadNumElements, m_quadElementType, IntPtr.Zero);
+				//GL.DrawElements(All.Triangles,  m_quadNumElements, (All)m_quadElementType, IntPtr.Zero);
 			}
 			else{
-				//GL.DrawElements(BeginMode.Triangles, m_quadNumElements, m_quadElementType, m_quadModel.Elements);
-				GL.DrawElements(All.Triangles,  m_quadNumElements, (All)m_quadElementType, m_quadModel.Elements);
+				GL.DrawElements(BeginMode.Triangles, m_quadNumElements, m_quadElementType, m_quadModel.Elements);
+				//GL.DrawElements(All.Triangles,  m_quadNumElements, (All)m_quadElementType, m_quadModel.Elements);
 			}
 #endif // RENDER_REFLECTION
 			

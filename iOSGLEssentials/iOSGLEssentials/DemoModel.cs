@@ -2,6 +2,7 @@ using System;
 using OpenTK.Graphics.ES20;
 using System.IO;
 using System.Runtime.InteropServices;
+using Mono;
 
 namespace iOSGLEssentials
 {
@@ -156,37 +157,35 @@ namespace iOSGLEssentials
 				
 				// OpenGL ES cannot use uint element
 				// So if the model has UI elements
-				/*
-				if(model.ElementType != DrawElementsType.UnsignedShort)
+				if(model.ElementType == DrawElementsType.UnsignedInt)
 				{
 					// ...Load the UI elements and convert to UnsignedShort
+					model.Elements = new byte[model.NumElements * sizeof (ushort)];
 					
-					var uiElements = new byte[model.ElementArraySize];
-					model.Elements = new byte[model.NumElements * Marshal.SizeOf (typeof(short))];
-					
-					uiElements = binaryReader.ReadBytes(model.ElementArraySize);
-					
-					var elemNum = 0;
-					for(elemNum = 0; elemNum < model.NumElements; elemNum++)
+					var dataConverter = DataConverter.Native;
+					for(var elemNum = 0; elemNum < model.Elements.Length; elemNum+=sizeof(ushort))
 					{
-						// We can't hanle this model if an element is out of the UnsignedInt range
-						if(Convert.ToUInt32 (uiElements[elemNum]) >= 0xFFFF)
+						// Read the bytes that comprise the uint
+						var num = binaryReader.ReadBytes(sizeof(uint));
+						var ushortVal = BitConverter.ToUInt16(num, 0);
+						
+						// We can't handle this model if an element is out of the UnsignedInt range
+						if(ushortVal >= ushort.MaxValue)
 						{
 							return null;	
 						}
 						
-						model.Elements[elemNum] = uiElements[elemNum];
+						dataConverter.PutBytes(model.Elements, elemNum, ushortVal);
 					}
 					
 					model.ElementType = DrawElementsType.UnsignedShort;
-					model.ElementArraySize = model.NumElements * Marshal.SizeOf(typeof(short));
-				}
-				
+					model.ElementArraySize = model.Elements.Length;
+				}				
 				else
-				{*/
+				{
 					model.Elements = new byte[model.ElementArraySize];				
 					model.Elements = binaryReader.ReadBytes(model.ElementArraySize);
-				//}
+				}
 				
 				//
 				// Read the models Position Data
